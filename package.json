@@ -1,0 +1,40 @@
+{
+  "name": "teknofest_blokzincir",
+  "version": "2.0.0",
+  "description": "Block-Architect-TR: TEKNOFEST Kurumsal Blokzinciri, SSI & Akıllı Tedarik Zinciri Referans Mimarisi",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "node test/runner.js",
+    "test:hardhat": "hardhat test",
+    "compile": "hardhat compile",
+    "start": "node src/api/server.js",
+    "cli": "node src/cli/cli.js",
+    "demo": "node src/cli/cli.js demo",
+    "deploy": "node scripts/deploy.js",
+    "seed": "node scripts/seedData.js",
+    "serve:frontend": "npx serve frontend"
+  },
+  "keywords": [
+    "teknofest",
+    "blockchain",
+    "solidity",
+    "smart-contracts",
+    "ethereum",
+    "did",
+    "self-sovereign-identity",
+    "supply-chain",
+    "dao",
+    "it-architect",
+    "turkey"
+  ],
+  "author": "Bahattin Yunus Çetin <bahattinyunuscetin@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.2"
+  },
+  "dependencies": {
+    "ethers": "^6.11.1"
+  }
+}

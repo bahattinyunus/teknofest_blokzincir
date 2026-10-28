@@ -1,0 +1,12 @@
+{
+  "network": "Hardhat/LocalEVM",
+  "deployedAt": "2026-10-28T11:49:41.134Z",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "contracts": {
+    "BlockArchitectCore": "0x0a6fb6a7842cc5d28fa5c53fed6bbf4c70ae09d2",
+    "IdentityRegistry": "0x766b5ccdbc79f59da11208fd01ed81c3d1b29c15",
+    "SupplyChainTracker": "0xc96db0825c2cd615e01ffe174ca78c65fc133a20",
+    "TeknofestToken": "0x1927bd7c124624d1698aed2d4f675020b7b3040d",
+    "GovernanceDAO": "0x5cd992922634732f19255c3e05b21bd92599b6a3"
+  }
+}
