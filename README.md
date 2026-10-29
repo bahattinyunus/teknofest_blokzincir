@@ -8,6 +8,10 @@
   <img src="https://img.shields.io/badge/Mimar-Bahattin%20Yunus%20%C3%87etin-darkblue?style=for-the-badge&logo=linkedin&logoColor=white" alt="Architect">
 </p>
 
+<p align="center">
+  <img src="docs/assets/banner.jpg" alt="Block-Architect-TR Hero Banner" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+</p>
+
 ---
 
 ## 📌 Proje Vizyonu ve Genel Bakış
@@ -93,6 +97,10 @@ npm run serve:frontend
 ```
 > **Not:** Arayüz, MetaMask yüklü olmasa bile yerleşik **Sandbox Mimari Modu** sayesinde tüm sözleşme fonksiyonlarını, cüzdan bakiyelerini ve grafiklerini eksiksiz simüle eder.
 
+<p align="center">
+  <img src="docs/assets/dashboard_preview.jpg" alt="Block-Architect-TR Web3 Console Dashboard" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+</p>
+
 ---
 
 ## 📂 Proje Dizin Yapısı
@@ -109,6 +117,9 @@ teknofest_blokzincir/
 │   ├── TeknofestToken.sol
 │   └── GovernanceDAO.sol
 ├── docs/                    # Profesyonel Dokümantasyon
+│   ├── assets/              # Mimari banner ve arayüz görselleri
+│   │   ├── banner.jpg
+│   │   └── dashboard_preview.jpg
 │   ├── ARCHITECTURE.md      # Detaylı Mermaid mimari diyagramları
 │   ├── WHITE_PAPER.md       # Akademik düzeyde teknik White Paper
 │   └── API_REFERENCE.md     # SDK ve REST API başvuru kılavuzu

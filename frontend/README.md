@@ -1,5 +1,9 @@
 # 🌐 Block-Architect-TR | Web3 Frontend Konsolu
 
+<p align="center">
+  <img src="../docs/assets/dashboard_preview.jpg" alt="Web3 Console Preview" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+</p>
+
 Bu dizin, **TEKNOFEST Blokzinciri** referans mimarisi için geliştirilmiş interaktif Web3 yönetim ve denetleme arayüzünü içerir.
 
 ---
