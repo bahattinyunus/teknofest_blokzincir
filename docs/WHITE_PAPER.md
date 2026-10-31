@@ -4,15 +4,15 @@
 **Yazar:** Bahattin Yunus Çetin  
 **Unvan:** IT Architect  
 **Konum:** Trabzon / Of  
-**Sürüm:** 2.0.0 (Enterprise Final)  
+**Sürüm:** 2.5.0 (Enterprise Final)  
 **Tarih:** 2025/2026  
 
 ---
 
 ## Özet (Abstract)
-Blokzinciri teknolojisi, yalnızca finansal transferler için değil; kamu güvenliği, ulusal savunma sanayii tedarik zinciri ve merkeziyetsiz kimlik doğrulama sistemleri için de kritik bir omurga teşkil etmektedir. Bu çalışmada sunulan **Block-Architect Protocol**, Türkiye'nin **Milli Teknoloji Hamlesi** vizyonu doğrultusunda TEKNOFEST Blokzinciri Yarışması için geliştirilmiş, yüksek güvenlikli, modüler ve EVM uyumlu bir kurumsal blokzinciri ekosistemidir.
+Blokzinciri teknolojisi, yalnızca finansal transferler için değil; kamu güvenliği, ulusal savunma sanayii tedarik zinciri, gizlilik korumalı kimlik doğrulama ve merkeziyetsiz yarışma hakemliği için de kritik bir omurga teşkil etmektedir. Bu çalışmada sunulan **Block-Architect Protocol**, Türkiye'nin **Milli Teknoloji Hamlesi** vizyonu doğrultusunda TEKNOFEST Blokzinciri Yarışması için geliştirilmiş, yüksek güvenlikli, modüler ve EVM uyumlu 8 sözleşmeli bir kurumsal blokzinciri ekosistemidir.
 
-Protokol; rol tabanlı erişim kontrollü çekirdek sistem (`BlockArchitectCore`), W3C v1.0 uyumlu Merkeziyetsiz Kimlik kaydı (`IdentityRegistry`), IoT telemetri mühürlü tedarik zinciri takibi (`SupplyChainTracker`), deflasyonist ekonomik modele sahip ekosistem jetonu (`TeknofestToken`) ve timelock güvenceli merkeziyetsiz otonom yönetim (`GovernanceDAO`) bileşenlerinden meydana gelir.
+Protokol; rol tabanlı erişim kontrollü çekirdek sistem (`BlockArchitectCore`), W3C v1.0 uyumlu Merkeziyetsiz Kimlik kaydı (`IdentityRegistry`), IoT telemetri mühürlü tedarik zinciri takibi (`SupplyChainTracker`), Sıfır Bilgi İspatı doğrulama motoru (`ZKProofVerifier`), jüri manipülasyonunu engelleyen commit-reveal puanlama protokolü (`JuryScoringProtocol`), L2 durum aktarımı sağlayan çapraz zincir köprüsü (`CrossChainBridgeAnchor`), deflasyonist ekonomik modele sahip ekosistem jetonu (`TeknofestToken`) ve timelock güvenceli merkeziyetsiz otonom yönetim (`GovernanceDAO`) bileşenlerinden meydana gelir.
 
 ---
 
@@ -20,8 +20,8 @@ Protokol; rol tabanlı erişim kontrollü çekirdek sistem (`BlockArchitectCore`
 Mevcut kurumsal blokzinciri entegrasyonlarında karşılaşılan temel zorluklar şunlardır:
 1. **Veri Bütünlüğü ve Dış Dünya Entegrasyonu:** IoT cihazlarından gelen verilerin (sıcaklık, nem, konum) manipülasyona açık olması.
 2. **Kimlik Yönetiminde Gizlilik ve Güvenlik:** Katılımcıların ve kurumların verilerinin merkezi veritabanlarında sızıntılara maruz kalması.
-3. **Yüksek Gas Maliyetleri:** Zincir üzerine her bir telemetri verisinin tek tek yazılmasının maliyet engeli yaratması.
-4. **Denetim Eksikliği:** Akıllı sözleşmelerde bağımsız denetçi düğümlerinin onay mekanizmasının bulunmaması.
+3. **Değerlendirme Şeffaflığı ve Hakem Kolüzyonu:** Yarışma değerlendirmelerinde hakemlerin birbirlerinin notlarından etkilenmesi veya puan sızıntıları.
+4. **Çoklu Zincir İletişim Engelleri:** Yerel alt ağların (Subnet) Ethereum veya Polygon gibi ana ağlarla güvenli durum senkronizasyonunun eksikliği.
 
 ---
 
@@ -34,40 +34,71 @@ $$H_{parent} = \text{Keccak256}(H_{left} \parallel H_{right})$$
 
 Bu sayede zincir üzerine yalnızca 32 baytlık **Merkle Kökü (Merkle Root)** yazılarak depolama karmaşıklığı $O(n)$ yerine $O(1)$'e indirgenir; doğrulama karmaşıklığı ise $O(\log n)$ olarak garanti edilir.
 
-### 2.2 Staking ve Yıllık Ödül Modeli (APY)
+### 2.2 Sıfır Bilgi İspatı (ZK) & Pedersen Aralık Taahhüdü
+Katılımcıların gizli verilerini veya sensör değerlerini ($v$) açıklamadan $v \in [v_{min}, v_{max}]$ olduğunu kanıtlamak için Pedersen taahhütleri ve nullifier mekanizması kullanılır:
+
+$$C = \text{Keccak256}(v \parallel r)$$
+
+Burada $r \in_R \{0, 1\}^{256}$ kriptografik körleme faktörüdür (blinding factor). Çift harcamayı engellemek amacıyla tek kullanımlık **Nullifier** üretilir:
+
+$$\mathcal{N} = \text{Keccak256}(sk \parallel \text{ScopeID})$$
+
+$\mathcal{N}$ değeri zincir üzerinde yalnızca bir defa tüketilebilir ($O(1)$ lookup).
+
+### 2.3 Anti-Collusion Commit-Reveal Protokolü
+Jüri üyelerinin puanları eşzamanlı ve gizli sunması için iki aşamalı taahhüt mekanizması uygulanır:
+
+$$\text{CommitPhase}: \quad H_{commit} = \text{Keccak256}(\text{TeamID} \parallel \vec{S} \parallel \text{Salt} \parallel \text{JuryAddress})$$
+
+$$\text{RevealPhase}: \quad \text{Verify}(H_{commit} \stackrel{?}{=} \text{Keccak256}(\dots))$$
+
+Tüm geçerli oylar açığa çıkarıldıktan sonra kırpılmış ağırlıklı ortalama (trimmed mean) hesaplanır.
+
+### 2.4 Çapraz Zincir Eşik Çoklu İmza (Threshold Multi-Sig) Doğrulaması
+$N$ adet relayer düğümünden en az $M$ tanesinin geçerli ECDSA imzası şart koşulur ($M$-of-$N$ threshold):
+
+$$\sum_{i=1}^{N} \mathbb{I}(\text{ecrecover}(\text{Digest}, \sigma_i) \in \mathcal{R}) \ge M$$
+
+Replay saldırılarına karşı her dış zincir için monotonik artan bir `nonce` tablosu zorunlu tutulur.
+
+### 2.5 Staking ve Yıllık Ödül Modeli (APY)
 Doğrulayıcı düğümlerin ağa kilitledikleri $S$ miktarındaki TKF jetonları için yıllık %12 oranında ödül tahakkuk eder:
 
 $$R = \frac{S \times 12 \times \Delta t}{365 \times 86400 \times 100}$$
 
-Burada $\Delta t$, saniye cinsinden stake süresini temsil eder. Kötü niyetli veya sahte telemetri ileten düğümler için sözleşme bünyesinde slashing (teminat yakımı) mekanizması aktiftir.
+Kötü niyetli veya sahte telemetri ileten düğümler için sözleşme bünyesinde slashing (teminat yakımı) mekanizması aktiftir.
 
 ---
 
-## 3. Protokol Bileşenleri
+## 3. 8'li Protokol Sözleşmeleri Matrisi
 
 | Akıllı Sözleşme | Görev ve Standart | Güvenlik Mekanizması |
 |---|---|---|
 | `BlockArchitectCore.sol` | Çekirdek İşlem ve Düğüm Yetkilendirme | RBAC, Pausable, ReentrancyGuard |
-| `IdentityRegistry.sol` | W3C DID v1.0 & Doğrulanabilir Kimlik Belgesi (VC) | Hiyerarşik İzinler, Geçerlilik Süresi |
+| `IdentityRegistry.sol` | W3C DID v1.0 & Doğrulanabilir Başarı Belgesi (VC) | Hiyerarşik İzinler, Geçerlilik Süresi |
 | `SupplyChainTracker.sol` | Aviyonik ve Kargo Telemetri Takibi | IoT SHA3 İmzaları, Çok Taraflı İmza |
-| `TeknofestToken.sol` | $TKF ERC-20 Fayda ve Doğrulayıcı Teminatı | Fixed Cap (10M), Ceza Yakımı |
+| `ZKProofVerifier.sol` | Sıfır Bilgi İspatı & Nullifier Gizlilik Motoru | Anti-Double-Spend, Merkle Membership |
+| `JuryScoringProtocol.sol` | TEKNOFEST Hakem Heyeti Puanlama Konsensüsü | Commit-Reveal Anti-Collusion Scheme |
+| `CrossChainBridgeAnchor.sol`| L2/Subnet ile Ethereum/Polygon Durum Köprüsü | Monotonic Nonce Replay Guard, Multi-Sig |
+| `TeknofestToken.sol` | $TKF ERC-20 Fayda ve Doğrulayıcı Teminatı | Fixed Cap (10M), Ceza Yakımı (Slashing) |
 | `GovernanceDAO.sol` | Topluluk Teklifleri ve Parametre Değişimi | Kuorum, 24 Saatlik Timelock |
 
 ---
 
 ## 4. Tehdit Analizi ve Karşı Önlemler
 * **Sybil Saldırıları:** Yalnızca `ADMIN_ROLE` tarafından yetkilendirilmiş veya minimum 1,000 TKF teminat yatırmış doğrulayıcı düğümler işlem mühürleyebilir.
-* **Front-Running ve MEV:** Hassas lojistik ve oylama işlemlerinde zaman damgası ve hash-öncelikli kontrol kullanılır.
+* **Front-Running ve MEV:** Hassas lojistik ve jüri puanlama süreçlerinde Commit-Reveal şeması ile sızıntılar engellenir.
+* **Replay ve Çift Harcama:** ZK nullifier'ları ve köprü nonce tabloları ile her işlem tekil kılınır.
 * **Akıllı Sözleşme Zafiyetleri:** Tüm state değişiklikleri checks-effects-interactions modeline uygun yazılmış olup statik kod analizinden geçirilmiştir.
 
 ---
 
 ## 5. Yol Haritası (Roadmap)
-* **Faz 1 (2025 Q1-Q2):** Mimari tasarım, temel sözleşmeler ve birim test süitinin tamamlanması.
-* **Faz 2 (2025 Q3-Q4):** Web3 Yönetim Konsolu, IoT simülatörü ve Testnet dağıtımları.
+* **Faz 1 (2025 Q1-Q2):** Çekirdek mimari tasarım, temel sözleşmeler ve birim test süitinin tamamlanması.
+* **Faz 2 (2025 Q3-Q4):** Web3 Yönetim Konsolu, ZK-Proof motoru, Jüri Commit-Reveal protokolü ve Çapraz Zincir Köprüsü.
 * **Faz 3 (2026 Q1-Q2):** TEKNOFEST yarışma sahasında canlı aviyonik parça lojistik takibi ve jüri puanlama sistemi entegrasyonu.
 * **Faz 4 (2026 Q3+):** Yerli ve milli blokzinciri altyapıları ile Layer-2 Rollup entegrasyonu.
 
 ---
 
-*"Geleceğin mimarisi, veriyi şeffaf ve güvenli kılan blokzinciri blokları üzerine inşa edilecektir."*
+*"Geleceğin mimarisi, veriyi şeffaf, güvenli ve gizliliği koruyarak mühürleyen blokzinciri blokları üzerine inşa edilecektir."*

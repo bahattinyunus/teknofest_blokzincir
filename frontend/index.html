@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block-Architect-TR | TEKNOFEST Blokzinciri Yönetim Konsolu</title>
+    <title>Block-Architect-TR | TEKNOFEST Kurumsal Blokzinciri Konsolu</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -24,9 +24,9 @@
                 <div>
                     <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
                         BLOCK-ARCHITECT-TR
-                        <span class="text-xs px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">TEKNOFEST 2025</span>
+                        <span class="text-xs px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">TEKNOFEST 2025/2026</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Kurumsal Blokzinciri & SSI Altyapısı | Bahattin Yunus Çetin</p>
+                    <p class="text-xs text-slate-400">8'li Kurumsal Sözleşme Süiti & Sıfır Güven Mimarisi | Bahattin Yunus Çetin</p>
                 </div>
             </div>
 
@@ -53,23 +53,32 @@
 
         <!-- Navigation Tabs -->
         <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-3">
-            <button class="tab-btn active px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('overview')">
-                <i class="fa-solid fa-chart-pie mr-2 text-sky-400"></i>Genel Bakış
+            <button class="tab-btn active px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('overview')">
+                <i class="fa-solid fa-chart-pie mr-1.5 text-sky-400"></i>Genel Bakış
             </button>
-            <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('identity')">
-                <i class="fa-solid fa-id-card mr-2 text-indigo-400"></i>Merkeziyetsiz Kimlik (DID)
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('identity')">
+                <i class="fa-solid fa-id-card mr-1.5 text-indigo-400"></i>Merkeziyetsiz Kimlik (DID)
             </button>
-            <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('supplychain')">
-                <i class="fa-solid fa-truck-fast mr-2 text-amber-400"></i>Tedarik Zinciri & IoT
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('supplychain')">
+                <i class="fa-solid fa-truck-fast mr-1.5 text-amber-400"></i>Tedarik Zinciri & IoT
             </button>
-            <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('dao')">
-                <i class="fa-solid fa-landmark mr-2 text-emerald-400"></i>DAO Yönetişim
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('zk')">
+                <i class="fa-solid fa-user-secret mr-1.5 text-teal-400"></i>Sıfır Bilgi İspatı (ZK)
             </button>
-            <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('token')">
-                <i class="fa-solid fa-coins mr-2 text-yellow-400"></i>TKF Token & Staking
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('jury')">
+                <i class="fa-solid fa-scale-balanced mr-1.5 text-rose-400"></i>Jüri & Puanlama
             </button>
-            <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('operations')">
-                <i class="fa-solid fa-terminal mr-2 text-purple-400"></i>İşlem Konsolu
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('bridge')">
+                <i class="fa-solid fa-bridge mr-1.5 text-cyan-400"></i>Çapraz Zincir Köprüsü
+            </button>
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('dao')">
+                <i class="fa-solid fa-landmark mr-1.5 text-emerald-400"></i>DAO Yönetişim
+            </button>
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('token')">
+                <i class="fa-solid fa-coins mr-1.5 text-yellow-400"></i>TKF Token & Staking
+            </button>
+            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('operations')">
+                <i class="fa-solid fa-terminal mr-1.5 text-purple-400"></i>İşlem Konsolu
             </button>
         </div>
 
@@ -251,7 +260,192 @@
             </div>
         </section>
 
-        <!-- TAB 4: DAO & GOVERNANCE -->
+        <!-- TAB 4: ZERO-KNOWLEDGE PROOFS -->
+        <section id="tab-zk" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- ZK Proof Verification Form -->
+                <div class="glass-card p-6">
+                    <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-user-secret text-teal-400"></i> ZK Anonim Doğrulama Stüdyosu
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                        Kimlik, T.C. no veya ham sensör verisini ifşa etmeden Merkle üyelik ve Pedersen aralık kanıtlarını doğrular.
+                    </p>
+                    <form id="zkVerifyForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Gizli İddia (Örn: Öğrenci Belgesi / Sensör)</label>
+                            <input type="text" id="zkSecretClaim" placeholder="ör: Finalist_Ogrenci_KTU_985" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Tek Kullanımlık Nullifier Kapsamı</label>
+                            <input type="text" id="zkScope" value="TEKNOFEST_2025_FINAL_VOTE" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm transition shadow-lg shadow-teal-600/30">
+                            <i class="fa-solid fa-shield-cat mr-1.5"></i> ZK İspatı Üret ve Doğrula
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ZK Proof Logs & Nullifiers -->
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>Doğrulanan Sıfır Bilgi İspatları (Nullifier Günlüğü)</span>
+                        <span class="text-xs px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">Groth16 / Merkle Uyumlu</span>
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs uppercase bg-slate-900/50 text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Nullifier Özeti</th>
+                                    <th class="px-4 py-3">ZK Ağaç Kökü</th>
+                                    <th class="px-4 py-3">İspat Durumu</th>
+                                    <th class="px-4 py-3">Zaman</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zkProofTableBody" class="divide-y divide-slate-800 font-mono text-xs">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: JURY SCORING & LEADERBOARD -->
+        <section id="tab-jury" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Jury Scoring Panel -->
+                <div class="glass-card p-6 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-rose-400"></i> Hakem Heyeti Puanlama (Commit-Reveal)
+                    </h2>
+                    <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-xs text-slate-400">
+                        <span>Aktif Aşama:</span> <span class="font-bold text-rose-400" id="juryPhaseLabel">COMMIT AŞAMASI</span>
+                    </div>
+                    <form id="juryScoreForm" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Değerlendirilecek Takım</label>
+                            <select id="juryTargetTeam" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                                <option value="1">Cezeri Blokzincir Takımı</option>
+                                <option value="2">Alpha Mimarlık Takımı</option>
+                                <option value="3">Selçuk Otonom Savunma</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Yazılım Mimarisi (Max 25): <span id="valArch" class="text-white font-bold">25</span></label>
+                            <input type="range" id="scoreArch" min="10" max="25" value="25" class="w-full accent-rose-500" oninput="document.getElementById('valArch').innerText = this.value">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Güvenlik & Sıfır Güven (Max 25): <span id="valSec" class="text-white font-bold">24</span></label>
+                            <input type="range" id="scoreSec" min="10" max="25" value="24" class="w-full accent-rose-500" oninput="document.getElementById('valSec').innerText = this.value">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Milli Teknoloji İnovasyonu (Max 25): <span id="valInnov" class="text-white font-bold">25</span></label>
+                            <input type="range" id="scoreInnov" min="10" max="25" value="25" class="w-full accent-rose-500" oninput="document.getElementById('valInnov').innerText = this.value">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Uygulama & Kod Kalitesi (Max 15): <span id="valImpl" class="text-white font-bold">15</span></label>
+                            <input type="range" id="scoreImpl" min="5" max="15" value="15" class="w-full accent-rose-500" oninput="document.getElementById('valImpl').innerText = this.value">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Sunum & Savunma (Max 10): <span id="valPres" class="text-white font-bold">10</span></label>
+                            <input type="range" id="scorePres" min="3" max="10" value="10" class="w-full accent-rose-500" oninput="document.getElementById('valPres').innerText = this.value">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <button type="button" onclick="handleJuryCommit()" class="py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold transition">
+                                [1] Commit (Şifrele)
+                            </button>
+                            <button type="button" onclick="handleJuryReveal()" class="py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-slate-700 transition">
+                                [2] Reveal (Açığa Çıkar)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Leaderboard Table -->
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>TEKNOFEST Finalist Liderlik Tablosu & Başarı Tescili</span>
+                        <span class="text-xs px-2.5 py-1 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">Değiştirilemez Jüri Konsensüsü</span>
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs uppercase bg-slate-900/50 text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Sıra</th>
+                                    <th class="px-4 py-3">Takım Adı</th>
+                                    <th class="px-4 py-3">Proje Başlığı</th>
+                                    <th class="px-4 py-3">Nihai Puan</th>
+                                    <th class="px-4 py-3">Tescil / Ödül</th>
+                                </tr>
+                            </thead>
+                            <tbody id="juryLeaderboardBody" class="divide-y divide-slate-800 text-xs">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: CROSS-CHAIN BRIDGE -->
+        <section id="tab-bridge" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Dispatch Message -->
+                <div class="glass-card p-6 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bridge text-cyan-400"></i> Çapraz Zincir Durum Sevk Paneli
+                    </h2>
+                    <form id="bridgeForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Hedef Blokzincir Ağı</label>
+                            <select id="bridgeDestChain" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                                <option value="137">Polygon (#137) - Ana Ağ</option>
+                                <option value="1">Ethereum (#1) - L1 Settlement</option>
+                                <option value="43114">Avalanche C-Chain (#43114)</option>
+                                <option value="80002">Polygon Amoy Testnet (#80002)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Hedef Akıllı Sözleşme Adresi</label>
+                            <input type="text" id="bridgeTargetContract" value="0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Röle Edilecek Durum Yükü</label>
+                            <textarea id="bridgePayload" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono text-xs">CertifiedTeam_Cezeri_GoldMedal_Score9920</textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm transition shadow-lg shadow-cyan-600/30">
+                            <i class="fa-solid fa-paper-plane mr-1.5"></i> Durumu Dış Zincire Sevk Et
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Dispatched Messages List -->
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>Köprüden Sevk Edilen Mesajlar (Cross-Chain Outbound Stream)</span>
+                        <span class="text-xs px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">M-of-N Relayer Çoklu İmza Korumalı</span>
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs uppercase bg-slate-900/50 text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Nonce</th>
+                                    <th class="px-4 py-3">Hedef Ağ</th>
+                                    <th class="px-4 py-3">Yük Özeti</th>
+                                    <th class="px-4 py-3">Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bridgeTableBody" class="divide-y divide-slate-800 font-mono text-xs">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: DAO & GOVERNANCE -->
         <section id="tab-dao" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Proposal Creation -->
@@ -287,7 +481,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: TOKEN & STAKING -->
+        <!-- TAB 8: TOKEN & STAKING -->
         <section id="tab-token" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Staking Card -->
@@ -361,7 +555,7 @@
             </div>
         </section>
 
-        <!-- TAB 6: OPERATIONS CONSOLE -->
+        <!-- TAB 9: OPERATIONS CONSOLE -->
         <section id="tab-operations" class="tab-content hidden space-y-8">
             <div class="glass-card p-6">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -381,7 +575,7 @@
                 <div class="mt-6 border-t border-slate-800 pt-4">
                     <h3 class="text-xs uppercase font-bold text-slate-400 mb-3">İşlem Günlüğü (Audit Trail)</h3>
                     <div class="bg-black/60 rounded-lg p-4 font-mono text-xs text-slate-300 max-h-60 overflow-y-auto space-y-2" id="operationTerminalLog">
-                        <div>[SYSTEM] BlockArchitectCore initialized with owner 0xBahattinYunus...</div>
+                        <div>[SYSTEM] BlockArchitectCore & 8 Enterprise Contracts Initialized...</div>
                     </div>
                 </div>
             </div>

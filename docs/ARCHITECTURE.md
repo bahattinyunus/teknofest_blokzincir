@@ -1,6 +1,6 @@
 # 🏛️ Block-Architect-TR: Sistem ve Yazılım Mimarisi
 
-Bu belge, **TEKNOFEST Blokzinciri** yarışması standartlarında kurumsal seviyede tasarlanan **Block-Architect-TR** protokolünün sistem mimarisini, katmanlı yapısını ve veri akış diyagramlarını detaylandırmaktadır.
+Bu belge, **TEKNOFEST Blokzinciri** yarışması standartlarında kurumsal seviyede tasarlanan **Block-Architect-TR** protokolünün sistem mimarisini, 8 akıllı sözleşmeli modüler yapısını ve veri akış diyagramlarını detaylandırmaktadır.
 
 ---
 
@@ -10,35 +10,42 @@ Sistem, **Sıfır Güven Mimarisi (Zero Trust Architecture)** prensiplerine daya
 
 ```mermaid
 flowchart TD
-    subgraph L3["Katman 3: İstemci ve Dış Donanımlar (Clients & IoT)"]
-        UI["Web3 Yönetim Konsolu (HTML5 / Tailwind / Chart.js)"]
+    subgraph L3["Katman 3: İstemci, Donanım & Hakem Heyeti (Clients & IoT)"]
+        UI["Web3 Yönetim & Jüri Konsolu (Tailwind / Chart.js)"]
         CLI["Geliştirici CLI Terminali (Node.js)"]
         Sensors["Aviyonik & IoT Sensörleri (GPS, Sıcaklık, Nem)"]
+        JuryNode["Hakem & Değerlendirici Düğümleri"]
     end
 
-    subgraph L2["Katman 2: Entegrasyon & SDK Katmanı (Middleware / Oracle)"]
+    subgraph L2["Katman 2: Entegrasyon, ZK & Köprü Katmanı (Middleware / Oracle)"]
         SDK["BlockArchitect JavaScript/Node SDK"]
         API["REST API & Webhook Servisi"]
-        Merkle["Merkle Tree Doğrulama Motoru"]
+        Merkle["Merkle Tree & ZK Proof Doğrulama Motoru"]
+        Relayer["Cross-Chain Relayer Multi-Sig Rölesi"]
     end
 
     subgraph L1["Katman 1: Uygulama & DApp Sözleşmeleri (Business Contracts)"]
         DID["IdentityRegistry.sol (W3C DID / SSI)"]
         SC["SupplyChainTracker.sol (Lojistik & Telemetri)"]
+        ZK["ZKProofVerifier.sol (Gizlilik & Nullifier)"]
+        JURY["JuryScoringProtocol.sol (Commit-Reveal Puanlama)"]
+        BRIDGE["CrossChainBridgeAnchor.sol (L2 Köprü)"]
         DAO["GovernanceDAO.sol (Yönetişim & Oylama)"]
         TKF["TeknofestToken.sol (ERC-20, Staking, Slashing)"]
     end
 
     subgraph L0["Katman 0: Çekirdek Güvenlik & Konsensüs (Core Layer)"]
         Core["BlockArchitectCore.sol (RBAC, Devre Kesici, Denetim)"]
-        EVM["EVM Konsensüs Ağı (Ethereum / Polygon / Avalanche)"]
+        EVM["EVM Konsensüs Ağı (Avalanche Subnet / Polygon / Ethereum)"]
     end
 
     UI --> SDK
     CLI --> SDK
     Sensors --> API
+    JuryNode --> UI
     API --> SDK
     SDK --> Merkle
+    SDK --> Relayer
     SDK --> L1
     L1 --> Core
     Core --> EVM
@@ -72,44 +79,76 @@ sequenceDiagram
 
 ---
 
-## 3. Akıllı Tedarik Zinciri ve Soğuk Zincir Durum Makinesi
+## 3. Sıfır Bilgi İspatı (Zero-Knowledge) & Nullifier Yaşam Döngüsü
 
-Yüksek öneme sahip aviyonik, radar ve batarya parçalarının TEKNOFEST yarışma sahasına güvenli nakliyesi için durum makinesi:
+Kişisel veriler (TC No, doğum tarihi) veya gizli aviyonik telemetriler ifşa edilmeden Merkle üyeliği ve Pedersen aralık kanıtları ($min \le v \le max$) doğrulanır:
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Created: Kargo Manifestosu Mühürlendi
-    Created --> Dispatched: Gönderici Taşıyıcıya Teslim Etti
-    Dispatched --> InTransit: Telemetri Kayıtları Başladı (IoT)
-    InTransit --> CustomsCleared: Güvenlik & Kontrol Noktası Onaylandı
-    CustomsCleared --> OutForDelivery: Dağıtıma Çıkarıldı
-    OutForDelivery --> Delivered: Alıcı Teslim Aldı
-    Delivered --> Completed: Denetim Tamamlandı
-    
-    InTransit --> Disputed: Anormal Sıcaklık / Titreşim Algılandı
-    Disputed --> Completed: Hakem Heyeti Çözüm Kararı Verdi
+sequenceDiagram
+    autonumber
+    actor Participant as Anonim Katılımcı
+    participant Verifier as ZKProofVerifier.sol
+    participant NullifierRegistry as Nullifier Havuzu
+
+    Participant->>Participant: Merkle Kanıtı ve Nullifier Hesapla (N = H(Secret || Scope))
+    Participant->>Verifier: verifyAndConsumeCredential(Root, Leaf, Proof, Nullifier)
+    Verifier->>NullifierRegistry: Nullifier Daha Önce Harcandı mı?
+    alt Harcanmamış (Geçerli)
+        NullifierRegistry-->>Verifier: Temiz (Harcanmadı)
+        Verifier->>NullifierRegistry: Nullifier'ı Mühürle (Harcanmış Olarak İşaretle)
+        Verifier-->>Participant: İspat Geçerli & İşlem Onaylandı
+    else Zaten Harcanmış (Çift Harcama)
+        NullifierRegistry-->>Verifier: HATA: NULLIFIER_ALREADY_CONSUMED
+        Verifier-->>Participant: İşlem İptal Edildi (Anti-Double-Spend)
+    end
 ```
 
 ---
 
-## 4. DAO Yönetişim ve Timelock Karar Mekanizması
+## 4. Hakem Heyeti Anti-Collusion Commit-Reveal Protokolü
 
-Protokolün yükseltmeleri ve doğrulayıcı düğüm izinleri topluluk tarafından şeffaf bir şekilde oylanır:
+Hakemlerin birbirlerinin notlarını görmeden bağımsız değerlendirme yapabilmesi için kriptografik iki aşamalı protokol uygulanır:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Jury as Jüri Üyesi
+    participant Protocol as JuryScoringProtocol.sol
+    actor Coordinator as Yarışma Koordinatörü
+
+    Coordinator->>Protocol: setPhase(Commit)
+    Jury->>Jury: Rubrik Notlarını ve Gizli Tuzu Hashle (CommitHash = H(Scores || Salt || Address))
+    Jury->>Protocol: commitScore(teamId, CommitHash)
+    Protocol-->>Jury: Taahhüt Blokzincire Yazıldı
+    
+    Coordinator->>Protocol: setPhase(Reveal)
+    Jury->>Protocol: revealScore(teamId, Rubric, Salt)
+    Protocol->>Protocol: CommitHash Doğrulaması Yap
+    Protocol-->>Coordinator: Puan Konsensüse Eklendi
+    
+    Coordinator->>Protocol: finalizeEvaluation(teamId)
+    Protocol-->>Coordinator: Ağırlıklı Konsensüs Puanı ve Derece Tescil Edildi
+```
+
+---
+
+## 5. Çapraz Zincir Durum Köprüsü (Cross-Chain Bridge Anchor)
+
+TEKNOFEST yerel alt ağı (Subnet / Rollup) ile Polygon veya Ethereum ana ağı arasında durum rölesi:
 
 ```mermaid
 flowchart LR
-    A["Teklif Sunma (Min: 1,000 TKF)"] --> B["Oylama Süresi (3 Gün)"]
-    B --> C{"Kuorum Sağlandı mı? (5,000 TKF)"}
-    C -- Hayır / Red --> D["Reddedildi (Defeated)"]
-    C -- Evet --> E["Kuyruğa Alındı (Timelock: 24 Saat)"]
-    E --> F["Akıllı Sözleşme Tarafından Otomatik İcra"]
+    A["Yerel Ağ (Subnet #31337)"] -->|"dispatchMessage(targetChainId, payload)"| B["CrossChainBridgeAnchor.sol"]
+    B -->|"BridgeMessageDispatched Event"| C["Relayer Multi-Sig Düğümleri (M-of-N)"]
+    C -->|"processInboundMessage(... + signatures)"| D["Hedef Ağ (Polygon #137 / L1)"]
+    D -->|"Replay Protection Monotonic Nonce"| E["Hedef Akıllı Sözleşme İcrası"]
 ```
 
 ---
 
-## 5. Güvenlik ve Defansif Kodlama Önlemleri
+## 6. Güvenlik ve Defansif Kodlama Önlemleri
 
-1. **Reentrancy Koruması:** Fonksiyonel çağrılarda `nonReentrant` bayrağı ile reentrancy zafiyetleri donanımsal düzeyde engellenmiştir.
-2. **Rol Tabanlı Erişim Kontrolü (RBAC):** `DEFAULT_ADMIN_ROLE`, `OPERATOR_ROLE` ve `AUDITOR_ROLE` ile yetki ayrımı sağlanmıştır.
+1. **Reentrancy Koruması:** Tüm fonksiyonel dış çağrılarda `nonReentrant` bayrağı ile reentrancy zafiyetleri engellenmiştir.
+2. **Rol Tabanlı Erişim Kontrolü (RBAC):** `DEFAULT_ADMIN_ROLE`, `OPERATOR_ROLE`, `VERIFIER_ROLE`, `JURY_ROLE`, `COORDINATOR_ROLE`, `RELAYER_ROLE` ve `BRIDGE_ADMIN_ROLE` ile yetki ayrımı sağlanmıştır.
 3. **Acil Durum Devre Kesicisi (Circuit Breaker):** Beklenmedik durumlarda sistem `emergencyPause()` ile dondurulabilir, inceleme sonrası `emergencyResume()` ile sürdürülebilir.
-4. **Merkle Ağacı Doğrulaması:** Toplu telemetri ve işlem verileri O(log n) karmaşıklığında Merkle kökleri ile zincir üzerinde minimum gas maliyetiyle doğrulanır.
+4. **Kriptografik Replay Koruması:** Hem ZK kimliklerinde `nullifier` harcama denetimi hem de çapraz zincir köprüsünde zincir-bazlı `nonce` kontrolü uygulanmıştır.

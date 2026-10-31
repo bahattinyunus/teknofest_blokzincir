@@ -72,17 +72,69 @@ const AppState = {
         },
         {
             id: 2,
-            title: 'TEKNOFEST 2025 IoT Telemetri Oracel Entegrasyonu',
-            desc: 'Chainlink oracel protokolü üzerinden sıcaklık/konum doğrulaması yapan sözleşmenin onaylanması.',
+            title: 'TEKNOFEST 2025 IoT Telemetri Oracle Entegrasyonu',
+            desc: 'Chainlink oracle protokolü üzerinden sıcaklık/konum doğrulaması yapan sözleşmenin onaylanması.',
             forVotes: 6420,
             againstVotes: 350,
             status: 'Oylamada'
         }
     ],
+    zkProofs: [
+        {
+            nullifier: '0x9fa102b84...32c1',
+            root: '0x55f2d6fa0...fee5',
+            status: 'Doğrulandı (Valid)',
+            time: '3 dk önce'
+        },
+        {
+            nullifier: '0x1c4e789a2...99b0',
+            root: '0x55f2d6fa0...fee5',
+            status: 'Doğrulandı (Valid)',
+            time: '18 dk önce'
+        }
+    ],
+    teams: [
+        {
+            id: 1,
+            name: 'Cezeri Blokzincir Takımı',
+            title: 'Havacılık Güvenli Telemetri Ağı',
+            score: 99.2,
+            rank: '🥇 Türkiye Birincisi (Şampiyon)'
+        },
+        {
+            id: 2,
+            name: 'Alpha Mimarlık Takımı',
+            title: 'Sıfır Güven Tabanlı DID ve Kimlik Doğrulama',
+            score: 98.4,
+            rank: '🥈 İkincilik Ödülü'
+        },
+        {
+            id: 3,
+            name: 'Selçuk Otonom Savunma',
+            title: 'Aviyonik Parça Tedarik Zinciri & Soğuk Zincir',
+            score: 96.8,
+            rank: '🥉 Üçüncülük Ödülü'
+        }
+    ],
+    bridgeMessages: [
+        {
+            nonce: 1,
+            targetChain: 'Polygon (#137)',
+            payloadHash: '0x7b841a9e...4210',
+            status: 'İletildi (Relayed)'
+        },
+        {
+            nonce: 2,
+            targetChain: 'Ethereum (#1)',
+            payloadHash: '0xd31c9402...9fba',
+            status: 'İletildi (Relayed)'
+        }
+    ],
     token: {
         balance: 100.0,
         staked: 50.0
-    }
+    },
+    juryCommitment: null
 };
 
 // --- Tab Switching ---
@@ -93,8 +145,9 @@ function switchTab(tabId) {
     const targetSection = document.getElementById(`tab-${tabId}`);
     if (targetSection) targetSection.classList.remove('hidden');
 
-    // Highlight button
-    event.currentTarget.classList.add('active');
+    if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+    }
 }
 
 // --- Render Functions ---
@@ -113,8 +166,10 @@ function renderDIDTable() {
             </td>
         </tr>
     `).join('');
-    document.getElementById('didCountBadge').innerText = `${AppState.identities.length} Kimlik`;
-    document.getElementById('statIdentities').innerText = AppState.identities.length;
+    const badge = document.getElementById('didCountBadge');
+    if (badge) badge.innerText = `${AppState.identities.length} Kimlik`;
+    const stat = document.getElementById('statIdentities');
+    if (stat) stat.innerText = AppState.identities.length;
 }
 
 function renderShipments() {
@@ -142,7 +197,54 @@ function renderShipments() {
             </div>
         </div>
     `).join('');
-    document.getElementById('statShipments').innerText = AppState.shipments.length;
+    const stat = document.getElementById('statShipments');
+    if (stat) stat.innerText = AppState.shipments.length;
+}
+
+function renderZKProofs() {
+    const tbody = document.getElementById('zkProofTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = AppState.zkProofs.map(p => `
+        <tr class="hover:bg-slate-800/40">
+            <td class="px-4 py-3 text-teal-400 font-semibold">${p.nullifier}</td>
+            <td class="px-4 py-3 text-slate-400">${p.root}</td>
+            <td class="px-4 py-3">
+                <span class="px-2 py-0.5 rounded text-[11px] bg-teal-500/10 text-teal-400 border border-teal-500/20">${p.status}</span>
+            </td>
+            <td class="px-4 py-3 text-slate-500">${p.time}</td>
+        </tr>
+    `).join('');
+}
+
+function renderJuryLeaderboard() {
+    const tbody = document.getElementById('juryLeaderboardBody');
+    if (!tbody) return;
+    tbody.innerHTML = AppState.teams.map((t, idx) => `
+        <tr class="hover:bg-slate-800/40 ${idx === 0 ? 'bg-rose-950/20 border-l-2 border-rose-500' : ''}">
+            <td class="px-4 py-3 font-bold text-white">#${idx + 1}</td>
+            <td class="px-4 py-3 text-rose-300 font-semibold">${t.name}</td>
+            <td class="px-4 py-3 text-slate-400">${t.title}</td>
+            <td class="px-4 py-3 font-mono font-bold text-white text-sm">${t.score.toFixed(1)} / 100</td>
+            <td class="px-4 py-3">
+                <span class="px-2 py-0.5 rounded text-[11px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">${t.rank}</span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderBridgeMessages() {
+    const tbody = document.getElementById('bridgeTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = AppState.bridgeMessages.map(m => `
+        <tr class="hover:bg-slate-800/40">
+            <td class="px-4 py-3 text-cyan-400 font-bold">#${m.nonce}</td>
+            <td class="px-4 py-3 text-white font-medium">${m.targetChain}</td>
+            <td class="px-4 py-3 text-slate-400">${m.payloadHash}</td>
+            <td class="px-4 py-3">
+                <span class="px-2 py-0.5 rounded text-[11px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${m.status}</span>
+            </td>
+        </tr>
+    `).join('');
 }
 
 function renderProposals() {
@@ -181,8 +283,10 @@ function renderProposals() {
 }
 
 function updateTokenUI() {
-    document.getElementById('userTokenBalance').innerText = `${AppState.token.balance.toFixed(2)} TKF`;
-    document.getElementById('userStakedBalance').innerText = `${AppState.token.staked.toFixed(2)} TKF`;
+    const balEl = document.getElementById('userTokenBalance');
+    if (balEl) balEl.innerText = `${AppState.token.balance.toFixed(2)} TKF`;
+    const stakeEl = document.getElementById('userStakedBalance');
+    if (stakeEl) stakeEl.innerText = `${AppState.token.staked.toFixed(2)} TKF`;
 }
 
 // --- User Actions ---
@@ -239,12 +343,55 @@ function addTelemetryCheckpoint(index) {
     logTerminal(`[IOT] ${s.code} için telemetri paketi blokzincire kaydedildi: Sıcaklık ${newTemp}`);
 }
 
+function handleJuryCommit() {
+    const arch = parseInt(document.getElementById('scoreArch').value);
+    const sec = parseInt(document.getElementById('scoreSec').value);
+    const innov = parseInt(document.getElementById('scoreInnov').value);
+    const impl = parseInt(document.getElementById('scoreImpl').value);
+    const pres = parseInt(document.getElementById('scorePres').value);
+    const teamId = parseInt(document.getElementById('juryTargetTeam').value);
+
+    const total = arch + sec + innov + impl + pres;
+    const fakeCommitHash = '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+
+    AppState.juryCommitment = {
+        teamId,
+        score: total,
+        commitHash: fakeCommitHash
+    };
+
+    document.getElementById('juryPhaseLabel').innerText = 'REVEAL AŞAMASI (Şifre Açma)';
+    logTerminal(`[JURY_COMMIT] Takım #${teamId} için puan özeti ağa taahhüt edildi: ${fakeCommitHash.slice(0, 20)}...`);
+    alert(`[Commit Başarılı] Puanınız şifrelendi ve taahhüt edildi. Hash: ${fakeCommitHash.slice(0, 16)}...`);
+}
+
+function handleJuryReveal() {
+    if (!AppState.juryCommitment) {
+        alert('Lütfen önce [1] Commit butonuna basarak puanı taahhüt edin!');
+        return;
+    }
+
+    const { teamId, score } = AppState.juryCommitment;
+    const team = AppState.teams.find(t => t.id === teamId);
+    if (team) {
+        team.score = parseFloat(((team.score + score) / 2).toFixed(1));
+    }
+    AppState.teams.sort((a, b) => b.score - a.score);
+    renderJuryLeaderboard();
+
+    document.getElementById('juryPhaseLabel').innerText = 'FINALIZED (Tescil Edildi)';
+    logTerminal(`[JURY_REVEAL] Takım #${teamId} puanı çözüldü ve konsensüse dahil edildi: ${score}/100`);
+    alert(`[Reveal Başarılı] Puan doğrulandı ve Liderlik Tablosu güncellendi!`);
+    AppState.juryCommitment = null;
+}
+
 function commitDirectOperation() {
     const input = document.getElementById('rawOpInput');
     const val = input.value.trim();
     if (!val) return;
     AppState.operationsCount++;
-    document.getElementById('statOperations').innerText = AppState.operationsCount.toLocaleString();
+    const statEl = document.getElementById('statOperations');
+    if (statEl) statEl.innerText = AppState.operationsCount.toLocaleString();
     const fakeHash = '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
     logTerminal(`[EXECUTE] Veri mühürlendi -> Hash: ${fakeHash.slice(0, 20)}... Payload: "${val}"`);
     input.value = '';
@@ -299,6 +446,46 @@ document.getElementById('shipmentForm').addEventListener('submit', (e) => {
     renderShipments();
     logTerminal(`[SUPPLY_CHAIN] Yeni kargo kaydı açıldı: [${code}]`);
     e.target.reset();
+});
+
+document.getElementById('zkVerifyForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const claim = document.getElementById('zkSecretClaim').value.trim();
+    const scope = document.getElementById('zkScope').value.trim();
+
+    const fakeNullifier = '0x' + Array.from({length: 20}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...null';
+    const fakeRoot = '0x55f2d6fa0...fee5';
+
+    AppState.zkProofs.unshift({
+        nullifier: fakeNullifier,
+        root: fakeRoot,
+        status: 'Doğrulandı (Valid)',
+        time: 'Az önce'
+    });
+    renderZKProofs();
+    logTerminal(`[ZK_VERIFY] Sıfır bilgi üyelik ve nullifier doğrulandı: ${fakeNullifier} (Kapsam: ${scope})`);
+    alert('Sıfır Bilgi İspatı (ZK-Proof) başarıyla doğrulandı ve tek kullanımlık Nullifier zincire yazıldı!');
+    e.target.reset();
+});
+
+document.getElementById('bridgeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const chainSelect = document.getElementById('bridgeDestChain');
+    const targetChainName = chainSelect.options[chainSelect.selectedIndex].text;
+    const payload = document.getElementById('bridgePayload').value.trim();
+
+    const nextNonce = AppState.bridgeMessages.length + 1;
+    const fakeHash = '0x' + Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...poly';
+
+    AppState.bridgeMessages.unshift({
+        nonce: nextNonce,
+        targetChain: targetChainName,
+        payloadHash: fakeHash,
+        status: 'İletildi (Relayed)'
+    });
+    renderBridgeMessages();
+    logTerminal(`[BRIDGE_DISPATCH] Mesaj sevk edildi -> Hedef: ${targetChainName} (Nonce #${nextNonce})`);
+    alert(`Köprü mesajı sevk edildi! Nonce #${nextNonce} - Durum dış zincire başarıyla aktarıldı.`);
 });
 
 document.getElementById('daoForm').addEventListener('submit', (e) => {
@@ -382,7 +569,6 @@ function initBlockStream() {
         </div>
     `).join('');
 
-    // Periodic block increment
     setInterval(() => {
         AppState.blockNumber++;
         const el = document.getElementById('currentBlockNumber');
@@ -390,7 +576,7 @@ function initBlockStream() {
     }, 5000);
 }
 
-// --- Wallet Button Interaction ---
+// --- Wallet Connection ---
 document.getElementById('walletBtn').addEventListener('click', () => {
     if (window.ethereum) {
         window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -414,6 +600,9 @@ document.getElementById('walletBtn').addEventListener('click', () => {
 window.addEventListener('DOMContentLoaded', () => {
     renderDIDTable();
     renderShipments();
+    renderZKProofs();
+    renderJuryLeaderboard();
+    renderBridgeMessages();
     renderProposals();
     updateTokenUI();
     initChart();

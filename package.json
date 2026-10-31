@@ -1,7 +1,7 @@
 {
   "name": "teknofest_blokzincir",
-  "version": "2.0.0",
-  "description": "Block-Architect-TR: TEKNOFEST Kurumsal Blokzinciri, SSI & Akıllı Tedarik Zinciri Referans Mimarisi",
+  "version": "2.5.0",
+  "description": "Block-Architect-TR: TEKNOFEST Kurumsal Blokzinciri, SSI, ZK-Proof, Jury Scoring & Cross-Chain Bridge Referans Mimarisi",
   "main": "src/main.js",
   "scripts": {
     "test": "node test/runner.js",

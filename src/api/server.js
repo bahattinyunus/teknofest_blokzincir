@@ -62,7 +62,7 @@ const server = http.createServer(async (req, res) => {
                 protocol: 'Block-Architect-TR',
                 competition: 'TEKNOFEST 2025/2026',
                 architect: 'Bahattin Yunus Çetin',
-                version: '2.0.0',
+                version: '2.5.0 Enterprise',
                 uptime: process.uptime()
             });
         }
@@ -124,16 +124,85 @@ const server = http.createServer(async (req, res) => {
             return sendJSON(res, 201, { success: true, shipment: result });
         }
 
+        // --- Zero-Knowledge Proofs ---
+        if (pathname === '/api/v1/zk/commit-root' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.root) return sendJSON(res, 400, { error: 'Missing field: root' });
+            const result = await sdk.commitZKRoot(body.root);
+            return sendJSON(res, 201, { success: true, result });
+        }
+
+        if (pathname === '/api/v1/zk/verify' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.root || !body.leaf || !body.proof || !body.isLeft) {
+                return sendJSON(res, 400, { error: 'Required: root, leaf, proof, isLeft' });
+            }
+            const valid = await sdk.verifyZKMembership(body.root, body.leaf, body.proof, body.isLeft);
+            return sendJSON(res, 200, { valid });
+        }
+
+        // --- Jury Scoring Protocol ---
+        if (pathname === '/api/v1/jury/teams' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.teamName || !body.projectTitle) {
+                return sendJSON(res, 400, { error: 'Required: teamName, projectTitle' });
+            }
+            const team = await sdk.registerTeam(body.teamName, body.projectTitle);
+            return sendJSON(res, 201, { success: true, team });
+        }
+
+        if (pathname === '/api/v1/jury/leaderboard' && method === 'GET') {
+            return sendJSON(res, 200, { leaderboard: sdk.getLeaderboard() });
+        }
+
+        if (pathname === '/api/v1/jury/commit' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.teamId || !body.rubric || !body.salt) {
+                return sendJSON(res, 400, { error: 'Required: teamId, rubric, salt' });
+            }
+            const resCommit = await sdk.commitJuryScore(body.teamId, body.rubric, body.salt, body.juryAddress);
+            return sendJSON(res, 201, { success: true, commitment: resCommit });
+        }
+
+        if (pathname === '/api/v1/jury/reveal' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.teamId || !body.rubric || !body.salt) {
+                return sendJSON(res, 400, { error: 'Required: teamId, rubric, salt' });
+            }
+            const resReveal = await sdk.revealJuryScore(body.teamId, body.rubric, body.salt, body.juryAddress);
+            return sendJSON(res, 200, { success: true, result: resReveal });
+        }
+
+        // --- Cross-Chain Bridge Anchor ---
+        if (pathname === '/api/v1/bridge/dispatch' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.destinationChainId || !body.targetContract || !body.payload) {
+                return sendJSON(res, 400, { error: 'Required: destinationChainId, targetContract, payload' });
+            }
+            const msg = await sdk.dispatchBridgeMessage(body.destinationChainId, body.targetContract, body.payload, body.sender);
+            return sendJSON(res, 201, { success: true, message: msg });
+        }
+
         // Fallback 404
-        sendJSON(res, 404, { error: 'Route not found', availableEndpoints: [
-            'GET /api/v1/health',
-            'GET /api/v1/metrics',
-            'POST /api/v1/operations',
-            'POST /api/v1/operations/batch',
-            'POST /api/v1/did/register',
-            'POST /api/v1/did/credential',
-            'POST /api/v1/shipments'
-        ]});
+        sendJSON(res, 404, {
+            error: 'Route not found',
+            availableEndpoints: [
+                'GET /api/v1/health',
+                'GET /api/v1/metrics',
+                'POST /api/v1/operations',
+                'POST /api/v1/operations/batch',
+                'POST /api/v1/did/register',
+                'POST /api/v1/did/credential',
+                'POST /api/v1/shipments',
+                'POST /api/v1/zk/commit-root',
+                'POST /api/v1/zk/verify',
+                'POST /api/v1/jury/teams',
+                'GET /api/v1/jury/leaderboard',
+                'POST /api/v1/jury/commit',
+                'POST /api/v1/jury/reveal',
+                'POST /api/v1/bridge/dispatch'
+            ]
+        });
     } catch (err) {
         sendJSON(res, 500, { error: err.message });
     }

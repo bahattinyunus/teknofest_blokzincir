@@ -1,7 +1,7 @@
 /**
  * @file deploy.js
  * @author Bahattin Yunus Çetin (IT Architect)
- * @notice Automated deployment pipeline for all Block-Architect-TR smart contracts.
+ * @notice Automated deployment pipeline for all 8 Block-Architect-TR smart contracts.
  */
 
 const fs = require('fs');
@@ -9,20 +9,19 @@ const path = require('path');
 
 async function main() {
     console.log("===============================================================");
-    console.log("  BLOCK-ARCHITECT-TR: AKILLI SÖZLEŞME DAĞITIM VE KURULUMU");
+    console.log("  BLOCK-ARCHITECT-TR: 8'Lİ AKILLI SÖZLEŞME DAĞITIM HATTI");
     console.log("===============================================================\n");
 
     let deployer;
-    let CoreFactory, IdentityFactory, SupplyChainFactory, TokenFactory, GovernanceFactory;
 
-    if (typeof ethers !== 'undefined') {
+    if (typeof ethers !== 'undefined' && ethers.getSigners) {
         [deployer] = await ethers.getSigners();
         console.log(`[DEPLOY] Dağıtım Yapan Cüzdan: ${deployer.address}`);
         if (deployer.getBalance) {
             console.log(`[BALANCE] Bakiye: ${(await deployer.getBalance()).toString()}`);
         }
     } else {
-        console.log("[SIMULATION] Ethers bulunamadı, simülasyon modu devrede.");
+        console.log("[SIMULATION] Standalone/Simülasyon Modu devrede.");
         deployer = { address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" };
     }
 
@@ -33,8 +32,7 @@ async function main() {
         contracts: {}
     };
 
-    // Helper deployment function
-    async function deployContract(name, factoryOrArgs, ...args) {
+    async function deployContract(name, ...args) {
         console.log(`\n⏳ Dağıtılıyor: ${name}...`);
         if (typeof ethers !== 'undefined' && ethers.getContractFactory) {
             const Factory = await ethers.getContractFactory(name);
@@ -45,32 +43,38 @@ async function main() {
             console.log(`   ✔ ${name} adrese dağıtıldı: ${targetAddr}`);
             return targetAddr;
         } else {
-            // Deterministic mock address generator
-            const mockAddr = "0x" + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+            // Deterministic hex generator for zero-friction standalone deployments
+            const hash = require('crypto').createHash('sha256').update(name + 'Teknofest2025').digest('hex');
+            const mockAddr = "0x" + hash.slice(0, 40);
             console.log(`   ✔ ${name} (Simüle) adrese dağıtıldı: ${mockAddr}`);
             return mockAddr;
         }
     }
 
     // 1. Core Contract
-    const coreAddr = await deployContract("BlockArchitectCore");
-    deployedAddresses.contracts.BlockArchitectCore = coreAddr;
+    deployedAddresses.contracts.BlockArchitectCore = await deployContract("BlockArchitectCore");
 
     // 2. Identity Registry
-    const identityAddr = await deployContract("IdentityRegistry");
-    deployedAddresses.contracts.IdentityRegistry = identityAddr;
+    deployedAddresses.contracts.IdentityRegistry = await deployContract("IdentityRegistry");
 
     // 3. Supply Chain Tracker
-    const supplyChainAddr = await deployContract("SupplyChainTracker");
-    deployedAddresses.contracts.SupplyChainTracker = supplyChainAddr;
+    deployedAddresses.contracts.SupplyChainTracker = await deployContract("SupplyChainTracker");
 
     // 4. Teknofest Token (10,000,000 Initial Supply)
-    const tokenAddr = await deployContract("TeknofestToken", null, 10000000);
+    const tokenAddr = await deployContract("TeknofestToken", 10000000);
     deployedAddresses.contracts.TeknofestToken = tokenAddr;
 
     // 5. Governance DAO (Linked to Token)
-    const governanceAddr = await deployContract("GovernanceDAO", null, tokenAddr);
-    deployedAddresses.contracts.GovernanceDAO = governanceAddr;
+    deployedAddresses.contracts.GovernanceDAO = await deployContract("GovernanceDAO", tokenAddr);
+
+    // 6. Zero-Knowledge Proof Verifier
+    deployedAddresses.contracts.ZKProofVerifier = await deployContract("ZKProofVerifier");
+
+    // 7. TEKNOFEST Jury Scoring Protocol
+    deployedAddresses.contracts.JuryScoringProtocol = await deployContract("JuryScoringProtocol");
+
+    // 8. Cross-Chain Bridge Anchor (ChainID 31337, Relayer Threshold 1)
+    deployedAddresses.contracts.CrossChainBridgeAnchor = await deployContract("CrossChainBridgeAnchor", 31337, 1);
 
     // Save deployment artifact
     const deploymentsDir = path.join(__dirname, '..', 'deployments');
@@ -86,7 +90,7 @@ async function main() {
     fs.writeFileSync(frontendConfigFile, JSON.stringify(deployedAddresses, null, 2));
     console.log(`📁 Frontend konfigürasyonu güncellendi: ${frontendConfigFile}`);
 
-    console.log("\n✨ TÜM SÖZLEŞMELER BAŞARIYLA DAĞITILDI VE BAĞLANDI!");
+    console.log("\n✨ 8 AKILLI SÖZLEŞMENİN TÜMÜ BAŞARIYLA DAĞITILDI VE BAĞLANDI!");
 }
 
 if (require.main === module) {
