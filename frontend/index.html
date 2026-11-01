@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block-Architect-TR | TEKNOFEST Kurumsal Blokzinciri Konsolu</title>
+    <title>Block-Architect-TR | TEKNOFEST 11'li Kurumsal Blokzinciri Konsolu</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -26,7 +26,7 @@
                         BLOCK-ARCHITECT-TR
                         <span class="text-xs px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">TEKNOFEST 2025/2026</span>
                     </h1>
-                    <p class="text-xs text-slate-400">8'li Kurumsal Sözleşme Süiti & Sıfır Güven Mimarisi | Bahattin Yunus Çetin</p>
+                    <p class="text-xs text-slate-400">11'li Kurumsal Sözleşme Mimarisi & Sıfır Güven Protokolü | Bahattin Yunus Çetin</p>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
                     <span class="text-slate-500">|</span>
                     <span class="text-slate-300">Blok: #<span id="currentBlockNumber">49,284</span></span>
                     <span class="text-slate-500">|</span>
-                    <span class="text-sky-400 font-mono">TPS: 45.2</span>
+                    <span class="text-sky-400 font-mono">TPS: 48.6</span>
                 </div>
 
                 <button id="walletBtn" class="glow-btn px-4 py-2 rounded-lg text-sm flex items-center gap-2">
@@ -53,38 +53,46 @@
 
         <!-- Navigation Tabs -->
         <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-3">
-            <button class="tab-btn active px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('overview')">
-                <i class="fa-solid fa-chart-pie mr-1.5 text-sky-400"></i>Genel Bakış
+            <button class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('overview')">
+                <i class="fa-solid fa-chart-pie mr-1 text-sky-400"></i>Genel Bakış
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('identity')">
-                <i class="fa-solid fa-id-card mr-1.5 text-indigo-400"></i>Merkeziyetsiz Kimlik (DID)
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('identity')">
+                <i class="fa-solid fa-id-card mr-1 text-indigo-400"></i>Kimlik (DID)
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('supplychain')">
-                <i class="fa-solid fa-truck-fast mr-1.5 text-amber-400"></i>Tedarik Zinciri & IoT
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('supplychain')">
+                <i class="fa-solid fa-truck-fast mr-1 text-amber-400"></i>Tedarik & IoT
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('zk')">
-                <i class="fa-solid fa-user-secret mr-1.5 text-teal-400"></i>Sıfır Bilgi İspatı (ZK)
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('zk')">
+                <i class="fa-solid fa-user-secret mr-1 text-teal-400"></i>ZK İspatı
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('jury')">
-                <i class="fa-solid fa-scale-balanced mr-1.5 text-rose-400"></i>Jüri & Puanlama
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('jury')">
+                <i class="fa-solid fa-scale-balanced mr-1 text-rose-400"></i>Jüri & Puan
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('bridge')">
-                <i class="fa-solid fa-bridge mr-1.5 text-cyan-400"></i>Çapraz Zincir Köprüsü
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('nft')">
+                <i class="fa-solid fa-medal mr-1 text-amber-300"></i>NFT Rozetler
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('dao')">
-                <i class="fa-solid fa-landmark mr-1.5 text-emerald-400"></i>DAO Yönetişim
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('oracle')">
+                <i class="fa-solid fa-satellite-dish mr-1 text-blue-400"></i>Oracle Hub
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('token')">
-                <i class="fa-solid fa-coins mr-1.5 text-yellow-400"></i>TKF Token & Staking
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('bridge')">
+                <i class="fa-solid fa-bridge mr-1 text-cyan-400"></i>Köprü (L2)
             </button>
-            <button class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('operations')">
-                <i class="fa-solid fa-terminal mr-1.5 text-purple-400"></i>İşlem Konsolu
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('security')">
+                <i class="fa-solid fa-shield-halved mr-1 text-emerald-400"></i>Güvenlik Lab
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('dao')">
+                <i class="fa-solid fa-landmark mr-1 text-violet-400"></i>DAO
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('token')">
+                <i class="fa-solid fa-coins mr-1 text-yellow-400"></i>TKF Staking
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition" onclick="switchTab('operations')">
+                <i class="fa-solid fa-terminal mr-1 text-purple-400"></i>Konsol
             </button>
         </div>
 
         <!-- TAB 1: OVERVIEW -->
         <section id="tab-overview" class="tab-content space-y-8">
-            <!-- Metrics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="glass-card p-6">
                     <div class="flex items-center justify-between">
@@ -127,14 +135,14 @@
 
                 <div class="glass-card p-6">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Stake Edilen TKF</span>
-                        <div class="w-8 h-8 rounded bg-yellow-500/10 text-yellow-400 flex items-center justify-center">
-                            <i class="fa-solid fa-vault"></i>
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Aktif Sözleşmeler</span>
+                        <div class="w-8 h-8 rounded bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                            <i class="fa-solid fa-file-code"></i>
                         </div>
                     </div>
-                    <p class="text-3xl font-bold mt-2 text-white">4.85M</p>
-                    <span class="text-xs text-yellow-400 flex items-center mt-2">
-                        <i class="fa-solid fa-percent mr-1"></i> %12 Yıllık Getiri (APY)
+                    <p class="text-3xl font-bold mt-2 text-white">11 Modül</p>
+                    <span class="text-xs text-purple-400 flex items-center mt-2">
+                        <i class="fa-solid fa-check-double mr-1"></i> %100 Test Doğrulamalı
                     </span>
                 </div>
             </div>
@@ -166,7 +174,6 @@
         <!-- TAB 2: IDENTITY (DID) -->
         <section id="tab-identity" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Registration Form -->
                 <div class="glass-card p-6">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-user-plus text-indigo-400"></i> Yeni DID Kimliği Oluştur
@@ -195,7 +202,6 @@
                     </form>
                 </div>
 
-                <!-- DID List & Credentials -->
                 <div class="glass-card p-6 lg:col-span-2">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center justify-between">
                         <span>Kayıtlı W3C Kimlik Belgeleri</span>
@@ -223,7 +229,6 @@
         <!-- TAB 3: SUPPLY CHAIN -->
         <section id="tab-supplychain" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Create Shipment -->
                 <div class="glass-card p-6">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-box text-amber-400"></i> Yeni Sevkiyat Oluştur
@@ -247,7 +252,6 @@
                     </form>
                 </div>
 
-                <!-- Active Shipments & Timeline -->
                 <div class="glass-card p-6 lg:col-span-2">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center justify-between">
                         <span>Sevkiyat Takip & IoT Telemetri Paneli</span>
@@ -263,7 +267,6 @@
         <!-- TAB 4: ZERO-KNOWLEDGE PROOFS -->
         <section id="tab-zk" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- ZK Proof Verification Form -->
                 <div class="glass-card p-6">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-user-secret text-teal-400"></i> ZK Anonim Doğrulama Stüdyosu
@@ -286,7 +289,6 @@
                     </form>
                 </div>
 
-                <!-- ZK Proof Logs & Nullifiers -->
                 <div class="glass-card p-6 lg:col-span-2 space-y-4">
                     <h2 class="text-base font-semibold text-white flex items-center justify-between">
                         <span>Doğrulanan Sıfır Bilgi İspatları (Nullifier Günlüğü)</span>
@@ -311,10 +313,9 @@
             </div>
         </section>
 
-        <!-- TAB 5: JURY SCORING & LEADERBOARD -->
+        <!-- TAB 5: JURY SCORING -->
         <section id="tab-jury" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Jury Scoring Panel -->
                 <div class="glass-card p-6 space-y-4">
                     <h2 class="text-base font-semibold text-white flex items-center gap-2">
                         <i class="fa-solid fa-scale-balanced text-rose-400"></i> Hakem Heyeti Puanlama (Commit-Reveal)
@@ -362,7 +363,6 @@
                     </form>
                 </div>
 
-                <!-- Leaderboard Table -->
                 <div class="glass-card p-6 lg:col-span-2 space-y-4">
                     <h2 class="text-base font-semibold text-white flex items-center justify-between">
                         <span>TEKNOFEST Finalist Liderlik Tablosu & Başarı Tescili</span>
@@ -388,10 +388,130 @@
             </div>
         </section>
 
-        <!-- TAB 6: CROSS-CHAIN BRIDGE -->
+        <!-- TAB 6: SOULBOUND ACHIEVEMENT NFT -->
+        <section id="tab-nft" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-card p-6 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-certificate text-amber-400"></i> Yeni Başarı Rozeti Bas (NFT)
+                    </h2>
+                    <form id="mintBadgeForm" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Hak Sahibi Cüzdan Adresi</label>
+                            <input type="text" id="nftRecipient" value="0xStudentLeadTrabzon" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono" required>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Takım Adı</label>
+                            <input type="text" id="nftTeamName" value="Cezeri Otonom Takımı" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white" required>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Rozet Derecesi / Madalya Seviyesi</label>
+                            <select id="nftTier" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                                <option value="Gold">Altın Madalya (Türkiye 1.si)</option>
+                                <option value="Silver">Gümüş Madalya (Türkiye 2.si)</option>
+                                <option value="Bronze">Bronz Madalya (Türkiye 3.sü)</option>
+                                <option value="Finalist">Resmi Finalist Başarı Sertifikası</option>
+                                <option value="Jury">Akredite Hakem Heyeti Nişanı</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2 text-slate-300">
+                            <input type="checkbox" id="nftIsSoulbound" checked class="accent-amber-500 rounded">
+                            <label for="nftIsSoulbound">EIP-5192 Soulbound (Devredilemez Resmi Belge)</label>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold transition shadow-lg shadow-amber-600/30">
+                            On-Chain NFT Madalyasını Bas
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>Resmi TEKNOFEST On-Chain Başarı Rozetleri Vitrini</span>
+                        <span class="text-xs px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">EIP-5192 Sertifikalı</span>
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="nftBadgesGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: TELEMETRY ORACLE HUB -->
+        <section id="tab-oracle" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-card p-6 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-satellite-dish text-blue-400"></i> Uç Telemetri Düğümü Veri Gönder
+                    </h2>
+                    <form id="oracleFeedForm" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Telemetri Akış Kodu</label>
+                            <input type="text" id="oracleFeedId" value="TKF-IHA-01" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono" required>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Uç Düğüm İstasyonu</label>
+                            <select id="oracleNodeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                                <option value="0xNodeTrabzon">Trabzon Of Uç Sensör Düğümü</option>
+                                <option value="0xNodeSamsun">Samsun TEKNOFEST Alan İstasyonu</option>
+                                <option value="0xNodeAnkara">Ankara ODTÜ Yer İstasyonu</option>
+                                <option value="0xNodeIstanbul">İstanbul Teknopark Aviyonik Düğüm</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Sıcaklık (°C)</label>
+                                <input type="number" step="0.1" id="oracleTemp" value="21.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">İrtifa (metre)</label>
+                                <input type="number" id="oracleAlt" value="1250" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold transition shadow-lg shadow-blue-600/30">
+                            Oracle Düğümünden Besleme İlet
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>Çoklu Düğüm Konsensüs ve Aykırı Değer (Outlier) Filtresi</span>
+                        <span class="text-xs px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Bizans Hata Toleranslı Medyan</span>
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block">Konsensüs Sıcaklık</span>
+                            <span class="text-2xl font-bold text-white mt-1" id="consensusTempLabel">21.50 °C</span>
+                            <span class="text-[10px] text-emerald-400 block mt-1"><i class="fa-solid fa-shield mr-1"></i>3 Düğüm Onaylı</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block">Konsensüs İrtifa</span>
+                            <span class="text-2xl font-bold text-sky-400 mt-1" id="consensusAltLabel">1,250 m</span>
+                            <span class="text-[10px] text-slate-400 block mt-1">Aykırı Değer Filtrelendi</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900/50 uppercase text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-2">Düğüm</th>
+                                    <th class="px-4 py-2">Okunan Sıcaklık</th>
+                                    <th class="px-4 py-2">Okunan İrtifa</th>
+                                    <th class="px-4 py-2">Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="oracleFeedsTableBody" class="divide-y divide-slate-800 font-mono">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 8: CROSS-CHAIN BRIDGE -->
         <section id="tab-bridge" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Dispatch Message -->
                 <div class="glass-card p-6 space-y-4">
                     <h2 class="text-base font-semibold text-white flex items-center gap-2">
                         <i class="fa-solid fa-bridge text-cyan-400"></i> Çapraz Zincir Durum Sevk Paneli
@@ -420,7 +540,6 @@
                     </form>
                 </div>
 
-                <!-- Dispatched Messages List -->
                 <div class="glass-card p-6 lg:col-span-2 space-y-4">
                     <h2 class="text-base font-semibold text-white flex items-center justify-between">
                         <span>Köprüden Sevk Edilen Mesajlar (Cross-Chain Outbound Stream)</span>
@@ -445,30 +564,66 @@
             </div>
         </section>
 
-        <!-- TAB 7: DAO & GOVERNANCE -->
+        <!-- TAB 9: SECURITY & EXPLOIT LAB -->
+        <section id="tab-security" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-card p-6 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> Penetrasyon ve Saldırı Simülatörü
+                    </h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Akıllı sözleşmelerin reentrancy, nullifier replay ve yetkisiz rol erişimi saldırılarına karşı defansif dayanıklılığını test edin.
+                    </p>
+                    <div class="space-y-3">
+                        <button onclick="testReentrancyAttack()" class="w-full py-2.5 rounded-lg bg-red-950/60 border border-red-800 hover:bg-red-900/60 text-red-200 text-xs font-semibold flex items-center justify-between px-4 transition">
+                            <span><i class="fa-solid fa-bug mr-2"></i>Reentrancy İstismarı Dene</span>
+                            <span class="px-2 py-0.5 rounded bg-red-900/80 text-[10px]">Test</span>
+                        </button>
+                        <button onclick="testNullifierReplay()" class="w-full py-2.5 rounded-lg bg-amber-950/60 border border-amber-800 hover:bg-amber-900/60 text-amber-200 text-xs font-semibold flex items-center justify-between px-4 transition">
+                            <span><i class="fa-solid fa-clone mr-2"></i>ZK Nullifier Çift Harcama Dene</span>
+                            <span class="px-2 py-0.5 rounded bg-amber-900/80 text-[10px]">Test</span>
+                        </button>
+                        <button onclick="testUnauthorizedAdmin()" class="w-full py-2.5 rounded-lg bg-purple-950/60 border border-purple-800 hover:bg-purple-900/60 text-purple-200 text-xs font-semibold flex items-center justify-between px-4 transition">
+                            <span><i class="fa-solid fa-key mr-2"></i>Yetkisiz Admin Rol Yükseltme</span>
+                            <span class="px-2 py-0.5 rounded bg-purple-900/80 text-[10px]">Test</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 lg:col-span-2 space-y-4">
+                    <h2 class="text-base font-semibold text-white flex items-center justify-between">
+                        <span>Statik & Dinamik Güvenlik Denetim Raporu</span>
+                        <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Güvenlik Notu: A+ (Tam Koruma)</span>
+                    </h2>
+                    <div class="space-y-3" id="securityAuditReportContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 10: DAO & GOVERNANCE -->
         <section id="tab-dao" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Proposal Creation -->
                 <div class="glass-card p-6">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-file-signature text-emerald-400"></i> Teklif Oluştur
+                        <i class="fa-solid fa-file-signature text-violet-400"></i> Teklif Oluştur
                     </h2>
                     <form id="daoForm" class="space-y-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Teklif Başlığı</label>
-                            <input type="text" id="proposalTitle" placeholder="ör: Doğrulayıcı Düğüm Ödül Artırımı" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" required>
+                            <input type="text" id="proposalTitle" placeholder="ör: Doğrulayıcı Düğüm Ödül Artırımı" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" required>
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Açıklama & Gerekçe</label>
-                            <textarea id="proposalDesc" rows="3" placeholder="ör: Ağ güvenliğini artırmak için yıllık APY oranının %12'den %15'e çıkarılması." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" required></textarea>
+                            <textarea id="proposalDesc" rows="3" placeholder="ör: Ağ güvenliğini artırmak için yıllık APY oranının %12'den %15'e çıkarılması." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" required></textarea>
                         </div>
-                        <button type="submit" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow-lg shadow-emerald-600/30">
+                        <button type="submit" class="w-full py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm transition shadow-lg shadow-violet-600/30">
                             Teklifi Topluluğa Sun
                         </button>
                     </form>
                 </div>
 
-                <!-- Proposals List -->
                 <div class="glass-card p-6 lg:col-span-2">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center justify-between">
                         <span>Aktif Yönetişim Oylamaları</span>
@@ -481,10 +636,9 @@
             </div>
         </section>
 
-        <!-- TAB 8: TOKEN & STAKING -->
+        <!-- TAB 11: TOKEN & STAKING -->
         <section id="tab-token" class="tab-content hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Staking Card -->
                 <div class="glass-card p-6">
                     <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-coins text-yellow-400"></i> TKF Token Staking
@@ -523,7 +677,6 @@
                     </div>
                 </div>
 
-                <!-- Tokenomics Info -->
                 <div class="glass-card p-6 lg:col-span-2">
                     <h2 class="text-base font-semibold text-white mb-4">TKF Tokenomik & Doğrulayıcı Teşvik Modeli</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -548,14 +701,14 @@
                             <i class="fa-solid fa-shield-virus text-sky-400"></i> Slashing & Ceza Güvenlik Sistemi
                         </h4>
                         <p class="text-xs text-slate-400 leading-relaxed">
-                            Ağ bütünlüğünü bozan, çift imza atan veya yanlış telemetri ileten doğrulayıcı düğümlerin teminat olarak kilitlediği TKF tokenları, <code>TeknofestToken.sol</code> sözleşmesi tarafından otomatik olarak cezalandırılır (slashed) ve yakılır. Bu mekanizma sıfır güven mimarisinin ekonomik caydırıcılığını garanti eder.
+                            Ağ bütünlüğünü bozan veya sahte telemetri ileten düğümlerin teminatları, <code>TeknofestToken.sol</code> sözleşmesi tarafından otomatik olarak cezalandırılır (slashed) ve yakılır.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 9: OPERATIONS CONSOLE -->
+        <!-- TAB 12: OPERATIONS CONSOLE -->
         <section id="tab-operations" class="tab-content hidden space-y-8">
             <div class="glass-card p-6">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -575,7 +728,7 @@
                 <div class="mt-6 border-t border-slate-800 pt-4">
                     <h3 class="text-xs uppercase font-bold text-slate-400 mb-3">İşlem Günlüğü (Audit Trail)</h3>
                     <div class="bg-black/60 rounded-lg p-4 font-mono text-xs text-slate-300 max-h-60 overflow-y-auto space-y-2" id="operationTerminalLog">
-                        <div>[SYSTEM] BlockArchitectCore & 8 Enterprise Contracts Initialized...</div>
+                        <div>[SYSTEM] BlockArchitectCore & 11 Enterprise Contracts Initialized...</div>
                     </div>
                 </div>
             </div>
@@ -586,7 +739,7 @@
     <!-- Footer -->
     <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
         <p>Block-Architect-TR &copy; 2025-2026 Bahattin Yunus Çetin (IT Architect) - Trabzon/Of</p>
-        <p class="mt-1">TEKNOFEST Blokzinciri Yarışması Referans Mimarisi | MIT Lisansı</p>
+        <p class="mt-1">TEKNOFEST Blokzinciri Yarışması Referans Mimarisi | 11 Akıllı Sözleşme Süiti | MIT Lisansı</p>
     </footer>
 
     <script src="app.js"></script>

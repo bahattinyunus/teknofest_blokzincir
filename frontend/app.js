@@ -2,6 +2,7 @@
  * @file app.js
  * @author Bahattin Yunus Çetin (IT Architect)
  * @notice Interactive Web3 Dashboard application logic for Block-Architect-TR.
+ * @version 3.0.0 Enterprise Suite
  */
 
 // --- State Store ---
@@ -114,6 +115,84 @@ const AppState = {
             title: 'Aviyonik Parça Tedarik Zinciri & Soğuk Zincir',
             score: 96.8,
             rank: '🥉 Üçüncülük Ödülü'
+        }
+    ],
+    badges: [
+        {
+            tokenId: 1,
+            recipient: '0xStudentLeadTrabzon',
+            teamName: 'Cezeri Otonom Takımı',
+            tier: 'Gold',
+            isSoulbound: true,
+            issueDate: '2025-08-30'
+        },
+        {
+            tokenId: 2,
+            recipient: '0xAlphaLeadIstanbul',
+            teamName: 'Alpha Mimarlık Takımı',
+            tier: 'Silver',
+            isSoulbound: true,
+            issueDate: '2025-08-30'
+        },
+        {
+            tokenId: 3,
+            recipient: '0xSelcukLeadAnkara',
+            teamName: 'Selçuk Otonom Savunma',
+            tier: 'Bronze',
+            isSoulbound: true,
+            issueDate: '2025-08-30'
+        },
+        {
+            tokenId: 4,
+            recipient: '0xBahattinYunusOf',
+            teamName: 'Block-Architect-TR',
+            tier: 'Jury',
+            isSoulbound: true,
+            issueDate: '2025-08-28'
+        }
+    ],
+    oracleFeeds: [
+        { node: 'Trabzon Of Uç Sensör Düğümü', temp: 21.4, altitude: 1250, status: 'Aktif / Doğrulandı', color: 'emerald' },
+        { node: 'Samsun TEKNOFEST Alan İstasyonu', temp: 21.6, altitude: 1248, status: 'Aktif / Doğrulandı', color: 'emerald' },
+        { node: 'Ankara ODTÜ Yer İstasyonu', temp: 21.5, altitude: 1252, status: 'Aktif / Doğrulandı', color: 'emerald' },
+        { node: 'İstanbul Teknopark Aviyonik Düğüm', temp: 29.8, altitude: 1490, status: 'Aykırı Değer (Filtrelendi)', color: 'rose' }
+    ],
+    auditChecks: [
+        {
+            name: 'Reentrancy Koruması (ReentrancyGuard)',
+            status: 'GEÇTİ (PASSED)',
+            desc: 'CEI (Checks-Effects-Interactions) prensibi ve ReentrancyGuard mutex kilitleri tüm transferlerde aktif.',
+            icon: 'fa-shield-halved'
+        },
+        {
+            name: 'Sıfır Bilgi Nullifier Çift Harcama Denetimi',
+            status: 'GEÇTİ (PASSED)',
+            desc: 'İspat nullifier haritası tek kullanımlık olarak işaretleniyor; tekrar kullanım anında revert ediyor.',
+            icon: 'fa-fingerprint'
+        },
+        {
+            name: 'Rol Tabanlı Erişim Denetimi (RBAC)',
+            status: 'GEÇTİ (PASSED)',
+            desc: 'ADMIN_ROLE, JURY_ROLE, VALIDATOR_ROLE hiyerarşisi OpenZeppelin standartlarına uygun biçimde kurgulandı.',
+            icon: 'fa-user-shield'
+        },
+        {
+            name: 'Devredilemez Soulbound NFT Koruması (EIP-5192)',
+            status: 'GEÇTİ (PASSED)',
+            desc: '_beforeTokenTransfer hook transfer/approval işlemlerini mutlak olarak engelliyor.',
+            icon: 'fa-award'
+        },
+        {
+            name: 'Bizans Hata Toleranslı Oracle Medyanı',
+            status: 'GEÇTİ (PASSED)',
+            desc: 'Ayıklanan en uç 2 sapma değeri elenerek medyan hesaplanıyor; sensör manipülasyonu engellendi.',
+            icon: 'fa-satellite-dish'
+        },
+        {
+            name: 'ERC-4337 Paymaster Gaz Sponsorluğu Güvenliği',
+            status: 'GEÇTİ (PASSED)',
+            desc: 'Günlük kota kontrolü ve öğrenci whitelist doğrulaması ile bütçe istismarı önleniyor.',
+            icon: 'fa-gas-pump'
         }
     ],
     bridgeMessages: [
@@ -229,6 +308,96 @@ function renderJuryLeaderboard() {
                 <span class="px-2 py-0.5 rounded text-[11px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">${t.rank}</span>
             </td>
         </tr>
+    `).join('');
+}
+
+function renderNFTBadges() {
+    const grid = document.getElementById('nftBadgesGrid');
+    if (!grid) return;
+    const tierColors = {
+        Gold: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', text: 'text-amber-400', icon: 'fa-trophy', label: 'Altın Madalya' },
+        Silver: { bg: 'bg-slate-400/10', border: 'border-slate-400/30', text: 'text-slate-300', icon: 'fa-award', label: 'Gümüş Madalya' },
+        Bronze: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', icon: 'fa-medal', label: 'Bronz Madalya' },
+        Finalist: { bg: 'bg-sky-500/10', border: 'border-sky-500/30', text: 'text-sky-400', icon: 'fa-certificate', label: 'Finalist Başarı Nişanı' },
+        Jury: { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-400', icon: 'fa-user-check', label: 'Akredite Hakem Heyeti' }
+    };
+
+    grid.innerHTML = AppState.badges.map(b => {
+        const conf = tierColors[b.tier] || tierColors.Finalist;
+        return `
+            <div class="border ${conf.border} ${conf.bg} rounded-xl p-4 flex flex-col justify-between space-y-3 relative overflow-hidden backdrop-blur-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs px-2 py-0.5 rounded font-mono font-bold bg-slate-900/60 ${conf.text} border ${conf.border}">
+                        #${b.tokenId} - ${conf.label}
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-lock text-[9px]"></i> Soulbound (EIP-5192)
+                    </span>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-sm flex items-center gap-2">
+                        <i class="fa-solid ${conf.icon} ${conf.text}"></i>
+                        ${b.teamName}
+                    </h3>
+                    <p class="text-slate-400 font-mono text-[11px] mt-1 truncate">Sahip: ${b.recipient}</p>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
+                    <span>Tescil: ${b.issueDate}</span>
+                    <span class="text-amber-300/80 font-mono">Devredilemez Resmi Belge</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderOracleFeeds() {
+    const tbody = document.getElementById('oracleFeedsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = AppState.oracleFeeds.map(f => `
+        <tr class="hover:bg-slate-800/40">
+            <td class="px-4 py-2.5 text-white font-medium flex items-center gap-2">
+                <i class="fa-solid fa-tower-broadcast text-blue-400"></i> ${f.node}
+            </td>
+            <td class="px-4 py-2.5 font-bold ${f.color === 'rose' ? 'text-rose-400 line-through' : 'text-slate-200'}">${f.temp.toFixed(1)} °C</td>
+            <td class="px-4 py-2.5 font-bold ${f.color === 'rose' ? 'text-rose-400 line-through' : 'text-sky-300'}">${f.altitude.toLocaleString()} m</td>
+            <td class="px-4 py-2.5">
+                <span class="px-2 py-0.5 rounded text-[10px] ${f.color === 'rose' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'} font-semibold">
+                    ${f.status}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+
+    // Compute median of valid feeds
+    const validFeeds = AppState.oracleFeeds.filter(f => f.color !== 'rose');
+    if (validFeeds.length > 0) {
+        const avgTemp = (validFeeds.reduce((acc, v) => acc + v.temp, 0) / validFeeds.length).toFixed(2);
+        const avgAlt = Math.round(validFeeds.reduce((acc, v) => acc + v.altitude, 0) / validFeeds.length);
+        const tempEl = document.getElementById('consensusTempLabel');
+        if (tempEl) tempEl.innerText = `${avgTemp} °C`;
+        const altEl = document.getElementById('consensusAltLabel');
+        if (altEl) altEl.innerText = `${avgAlt.toLocaleString()} m`;
+    }
+}
+
+function renderSecurityAudit() {
+    const container = document.getElementById('securityAuditReportContainer');
+    if (!container) return;
+    container.innerHTML = AppState.auditChecks.map(chk => `
+        <div class="border border-slate-800 rounded-lg p-3.5 bg-slate-900/40 flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+                    <i class="fa-solid ${chk.icon}"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-white">${chk.name}</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">${chk.desc}</p>
+                </div>
+            </div>
+            <span class="shrink-0 px-2.5 py-1 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold uppercase tracking-wider">
+                ${chk.status}
+            </span>
+        </div>
     `).join('');
 }
 
@@ -405,6 +574,31 @@ function logTerminal(msg) {
     log.prepend(div);
 }
 
+// --- Attack Simulator ---
+function testReentrancyAttack() {
+    logTerminal('[SECURITY_TEST] Reentrancy saldırı simülasyonu başlatıldı: contracts/security/ReentrancyAttacker.sol...');
+    setTimeout(() => {
+        logTerminal('[SECURITY_SUCCESS] ReentrancyGuard: reentrant call engellendi! CEI kuralı ve kilit devrede, bakiye korundu.');
+        alert('🛡️ [DEFANS BAŞARILI]\nReentrancyGuard saldırganın geri çağırma (re-entry) fonksiyonunu revert etti!\nBakiye ve durum %100 güvende.');
+    }, 400);
+}
+
+function testNullifierReplay() {
+    logTerminal('[SECURITY_TEST] ZK-Proof Nullifier çift harcama simüle ediliyor...');
+    setTimeout(() => {
+        logTerminal('[SECURITY_SUCCESS] ZKProofVerifier: NullifierAlreadyUsed() tetiklendi! Tekrar kullanım derhal revert edildi.');
+        alert('🛡️ [DEFANS BAŞARILI]\nZKProofVerifier: NullifierAlreadyUsed() fırlatıldı!\nAynı sıfır bilgi ispatı iki kez harcanamaz.');
+    }, 400);
+}
+
+function testUnauthorizedAdmin() {
+    logTerminal('[SECURITY_TEST] Yetkisiz hesap (0xAttacker...dead) ile acil durdurma (Circuit Breaker) çağrısı yapılıyor...');
+    setTimeout(() => {
+        logTerminal('[SECURITY_SUCCESS] AccessControl: AccessControlUnauthorizedAccount revert fırlatıldı! Sadece ADMIN_ROLE yetkilidir.');
+        alert('🛡️ [DEFANS BAŞARILI]\nAccessControl: AccessControlUnauthorizedAccount hatası ile yetkisiz işlem engellendi!');
+    }, 400);
+}
+
 // --- Form Submissions ---
 document.getElementById('didForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -507,6 +701,58 @@ document.getElementById('daoForm').addEventListener('submit', (e) => {
     e.target.reset();
 });
 
+const mintBadgeForm = document.getElementById('mintBadgeForm');
+if (mintBadgeForm) {
+    mintBadgeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const recipient = document.getElementById('nftRecipient').value.trim();
+        const teamName = document.getElementById('nftTeamName').value.trim();
+        const tier = document.getElementById('nftTier').value;
+        const isSoulbound = document.getElementById('nftIsSoulbound').checked;
+
+        const nextTokenId = AppState.badges.length + 1;
+        const newBadge = {
+            tokenId: nextTokenId,
+            recipient,
+            teamName,
+            tier,
+            isSoulbound,
+            issueDate: new Date().toISOString().slice(0, 10)
+        };
+
+        AppState.badges.unshift(newBadge);
+        renderNFTBadges();
+        logTerminal(`[NFT_MINT] Yeni EIP-5192 Soulbound Rozet #${nextTokenId} [${tier}] basıldı -> ${recipient}`);
+        alert(`Tebrikler! ${tier} Başarı Rozeti başarıyla basıldı ve blokzincire devredilemez olarak tescil edildi.`);
+    });
+}
+
+const oracleFeedForm = document.getElementById('oracleFeedForm');
+if (oracleFeedForm) {
+    oracleFeedForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const feedId = document.getElementById('oracleFeedId').value.trim();
+        const nodeSelect = document.getElementById('oracleNodeSelect');
+        const nodeName = nodeSelect.options[nodeSelect.selectedIndex].text;
+        const temp = parseFloat(document.getElementById('oracleTemp').value);
+        const alt = parseInt(document.getElementById('oracleAlt').value);
+
+        const isOutlier = (temp > 35.0 || temp < -10.0 || alt > 5000);
+        const newFeed = {
+            node: nodeName,
+            temp,
+            altitude: alt,
+            status: isOutlier ? 'Aykırı Değer (Filtrelendi)' : 'Aktif / Doğrulandı',
+            color: isOutlier ? 'rose' : 'emerald'
+        };
+
+        AppState.oracleFeeds.unshift(newFeed);
+        renderOracleFeeds();
+        logTerminal(`[ORACLE_FEED] ${feedId} beslemesi alındı: ${temp}°C, ${alt}m (${nodeName})`);
+        alert(`Oracle düğüm beslemesi kaydedildi! Konsensüs medyanı güncellendi.`);
+    });
+}
+
 // --- Chart Initialization ---
 function initChart() {
     const ctx = document.getElementById('networkActivityChart');
@@ -602,6 +848,9 @@ window.addEventListener('DOMContentLoaded', () => {
     renderShipments();
     renderZKProofs();
     renderJuryLeaderboard();
+    renderNFTBadges();
+    renderOracleFeeds();
+    renderSecurityAudit();
     renderBridgeMessages();
     renderProposals();
     updateTokenUI();

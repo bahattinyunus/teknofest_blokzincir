@@ -2,7 +2,7 @@
 /**
  * @file cli.js
  * @author Bahattin Yunus Çetin (IT Architect)
- * @notice Enterprise Command Line Interface for TEKNOFEST Block-Architect Blockchain Protocol.
+ * @notice Enterprise Command Line Interface for TEKNOFEST Block-Architect Blockchain Protocol (11 Contracts).
  */
 
 const BlockArchitectSDK = require('../sdk/BlockArchitectSDK');
@@ -21,7 +21,7 @@ const command = args[0] ? args[0].toLowerCase() : 'help';
 async function run() {
     console.log(`\n===============================================================`);
     console.log(`  🇹🇷  BLOCK-ARCHITECT-TR: TEKNOFEST BLOKZİNCİRİ YÖNETİMİ  🇹🇷`);
-    console.log(`  Mimar: Bahattin Yunus Çetin | Sürüm: 2.5.0 Enterprise Final`);
+    console.log(`  Mimar: Bahattin Yunus Çetin | Sürüm: 3.0.0 Masterpiece`);
     console.log(`===============================================================\n`);
 
     switch (command) {
@@ -119,8 +119,40 @@ async function run() {
             break;
         }
 
+        case 'nft': {
+            console.log('🎖️ SOULBOUND (EIP-5192) BAŞARI ROZETİ BASIMI...');
+            const badge = await sdk.mintAchievementBadge('0xStudentLead', 'Cezeri Otonom', 'Havacılık Güvenli Telemetri', 'Gold', 9850, '0xProofHash', true);
+            console.log(`✅ On-Chain NFT Rozeti Basıldı: Token #${badge.tokenId}`);
+            console.log(`   Takım:       ${badge.teamName}`);
+            console.log(`   Kategori:    ${badge.tier}`);
+            console.log(`   Puan:        ${badge.scoreScaled / 100} / 100.00`);
+            console.log(`   Soulbound:   ${badge.isSoulbound ? 'EVET (Devredilemez Resmi Belge)' : 'HAYIR'}`);
+            break;
+        }
+
+        case 'oracle': {
+            console.log('📡 ÇOKLU DÜĞÜM IoT TELEMETRİ ORACLE KONSENSÜSÜ...');
+            await sdk.submitTelemetryFeed('TKF-IHA-01', '0xTrabzonNode', 2140, 1200, 180);
+            await sdk.submitTelemetryFeed('TKF-IHA-01', '0xSamsunNode', 2150, 1205, 182);
+            await sdk.submitTelemetryFeed('TKF-IHA-01', '0xAnkaraNode', 2160, 1198, 179);
+            const cons = sdk.getTelemetryConsensus('TKF-IHA-01');
+            console.log(`✅ 3 Düğümden Gelen Veri Konsensüsü:`);
+            console.log(`   Akış ID:           ${cons.feedId}`);
+            console.log(`   Konsensüs Sıcaklık: ${cons.consensusTemperature / 100} °C`);
+            console.log(`   Konsensüs İrtifa:   ${cons.consensusAltitude} m`);
+            break;
+        }
+
+        case 'audit': {
+            console.log('🛡️ SİSTEM GÜVENLİK & PENETRASYON TEST DENETİMİ...');
+            const auditRes = await sdk.runSecurityAudit();
+            console.log(`✅ Genel Güvenlik Skoru: ${auditRes.overallStatus}`);
+            console.table(auditRes.checks);
+            break;
+        }
+
         case 'bridge': {
-            const dest = parseInt(args[1]) || 137; // Polygon
+            const dest = parseInt(args[1]) || 137;
             console.log(`🌉 ÇAPRAZ ZİNCİR KÖPRÜSÜ (Subnet -> Chain #${dest})...`);
             const msg = await sdk.dispatchBridgeMessage(dest, '0xPolygonTargetContract', 'StateUpdatePayload_Avionics');
             console.log(`✅ Köprü Mesajı Başarıyla Sevk Edildi!`);
@@ -131,7 +163,7 @@ async function run() {
         }
 
         case 'demo': {
-            console.log('🚀 KAPSAMLI MASTERPIECE DEMO SENARYOSU BAŞLATILIYOR (8 SÖZLEŞME ENTEGRELİ)...\n');
+            console.log('🚀 MASTERPIECE CANLI DEMO SENARYOSU (11 SÖZLEŞME EŞZAMANLI ENTEGRELİ)...\n');
 
             console.log('1. [DID / SSI] TEKNOFEST Takımı İçin Merkeziyetsiz Kimlik Oluşturuluyor...');
             const did = await sdk.registerDID('team', 'arch-trabzon-alpha', { name: 'Alpha Mimarlık Takımı' });
@@ -178,17 +210,33 @@ async function run() {
             await sdk.certifyTeam(t1.id, 'Türkiye Birincisi (Şampiyon)');
             console.log(`   -> Takım: ${t1.teamName} | Puan: ${t1.finalScore / 100} / 100.00 | Ödül: ${t1.rank}`);
 
-            console.log('\n6. [Çapraz Zincir Köprüsü] TEKNOFEST Subnet -> Polygon Köprüsü Üzerinden Durum Aktarımı...');
+            console.log('\n6. [Soulbound Achievement NFT] Şampiyon Takıma Resmi On-Chain Madalya Basılıyor...');
+            const badge = await sdk.mintAchievementBadge('0xCezeriLead', t1.teamName, t1.projectTitle, 'Gold', t1.finalScore, '0xJuryProof123', true);
+            console.log(`   -> EIP-5192 Soulbound Madalya Token #${badge.tokenId} Başarıyla Basıldı! (Devredilemez: ${badge.isSoulbound})`);
+
+            console.log('\n7. [Multi-Node Telemetry Oracle] Dağıtık Sensör Düğümleri Arasında Medyan Konsensüsü...');
+            await sdk.submitTelemetryFeed('TKF-IHA-LIVE', '0xTrabzonNode', 2140, 1500, 190);
+            await sdk.submitTelemetryFeed('TKF-IHA-LIVE', '0xSamsunNode', 2150, 1505, 188);
+            await sdk.submitTelemetryFeed('TKF-IHA-LIVE', '0xAnkaraNode', 2155, 1495, 192);
+            const cons = sdk.getTelemetryConsensus('TKF-IHA-LIVE');
+            console.log(`   -> 3 Düğüm Medyan Değeri: Sıcaklık: ${cons.consensusTemperature / 100}°C | İrtifa: ${cons.consensusAltitude}m`);
+
+            console.log('\n8. [Paymaster Gasless Sponsorluk] Öğrenci Takımına Sıfır Gas ile İşlem Yapılıyor...');
+            sdk.whitelistPaymasterTeam('0xStudentBaykar', 100);
+            const gasless = await sdk.executeGaslessTransaction('0xStudentBaykar', '0xIdentityRegistry', 'registerIdentity()');
+            console.log(`   -> Sponsorlu İşlem Başarılı! Maliyet: 0 WEI (Kalan Kota: ${gasless.remainingQuota})`);
+
+            console.log('\n9. [Çapraz Zincir Köprüsü] TEKNOFEST Subnet -> Polygon Köprüsü Üzerinden Durum Aktarımı...');
             const bridgeMsg = await sdk.dispatchBridgeMessage(137, '0xPolygonFinalistRegistry', 'CertifiedTeam_Cezeri');
             console.log(`   -> Köprü Sevk Nonce: #${bridgeMsg.nonce} Hedef Zincir: Polygon (#137)`);
 
-            console.log('\n7. [Toplu İşlemler] 10 Adet Sensör Verisi Merkle Ağacı ile Mühürleniyor...');
+            console.log('\n10. [Toplu İşlemler] 10 Adet Sensör Verisi Merkle Ağacı ile Mühürleniyor...');
             const batch = await sdk.submitBatch([
                 'Sensor_Packet_1', 'Sensor_Packet_2', 'Sensor_Packet_3', 'Sensor_Packet_4'
             ]);
             console.log(`   -> Merkle Kökü: ${batch.merkleRoot}`);
 
-            console.log('\n✨ KAPSAMLI DEMO BAŞARIYLA TAMAMLANDI! 8 Akıllı sözleşme ve SDK tam uyum içinde çalışıyor.\n');
+            console.log('\n✨ MASTERPIECE DEMO BAŞARIYLA TAMAMLANDI! 11 Akıllı sözleşme ve tüm katmanlar tam senkronize çalışıyor.\n');
             break;
         }
 
@@ -202,8 +250,11 @@ async function run() {
             console.log(`  shipment <kod> <açıklama> Tedarik zinciri sevkiyatı başlatır`);
             console.log(`  zk                        Sıfır Bilgi İspatı (ZK) doğrulaması çalıştırır`);
             console.log(`  jury                      Jüri Commit-Reveal oylama senaryosu yürütür`);
+            console.log(`  nft                       Soulbound (EIP-5192) başarı madalyası basar`);
+            console.log(`  oracle                    Çoklu düğüm IoT telemetri konsensüsü hesaplar`);
+            console.log(`  audit                     Sistem güvenlik ve penetrasyon denetimi yapar`);
             console.log(`  bridge [hedefChainId]     Çapraz zincir köprüsüne mesaj sevk eder`);
-            console.log(`  demo                      Uçtan uca tüm sistemin canlı simülasyonunu çalıştırır`);
+            console.log(`  demo                      11 sözleşmeli uçtan uca canlı simülasyonu çalıştırır`);
             break;
         }
     }

@@ -62,7 +62,8 @@ const server = http.createServer(async (req, res) => {
                 protocol: 'Block-Architect-TR',
                 competition: 'TEKNOFEST 2025/2026',
                 architect: 'Bahattin Yunus Çetin',
-                version: '2.5.0 Enterprise',
+                version: '3.0.0 Masterpiece Enterprise',
+                contractsCount: 11,
                 uptime: process.uptime()
             });
         }
@@ -183,6 +184,57 @@ const server = http.createServer(async (req, res) => {
             return sendJSON(res, 201, { success: true, message: msg });
         }
 
+        // --- Achievement NFT (Soulbound EIP-5192) ---
+        if (pathname === '/api/v1/nft/mint' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.recipient || !body.teamName) {
+                return sendJSON(res, 400, { error: 'Required: recipient, teamName' });
+            }
+            const badge = await sdk.mintAchievementBadge(
+                body.recipient,
+                body.teamName,
+                body.projectTitle || 'TEKNOFEST Finalisti',
+                body.tier || 'Gold',
+                body.scoreScaled || 9800,
+                body.verificationProof || '0xProof',
+                body.isSoulbound !== false
+            );
+            return sendJSON(res, 201, { success: true, badge });
+        }
+
+        if (pathname === '/api/v1/nft/badges' && method === 'GET') {
+            const recipient = parsedUrl.query.recipient;
+            return sendJSON(res, 200, { badges: sdk.getBadges(recipient) });
+        }
+
+        // --- Telemetry Oracle Hub ---
+        if (pathname === '/api/v1/oracle/telemetry' && method === 'POST') {
+            const body = await parseBody(req);
+            if (!body.feedId || !body.temperatureScaled) {
+                return sendJSON(res, 400, { error: 'Required: feedId, temperatureScaled' });
+            }
+            const result = await sdk.submitTelemetryFeed(
+                body.feedId,
+                body.nodeAddress || '0xNodeTrabzon',
+                body.temperatureScaled,
+                body.altitudeMeters || 1200,
+                body.speedKmh || 180
+            );
+            return sendJSON(res, 201, { success: true, result });
+        }
+
+        if (pathname === '/api/v1/oracle/consensus' && method === 'GET') {
+            const feedId = parsedUrl.query.feedId || 'TKF-IHA-01';
+            const consensus = sdk.getTelemetryConsensus(feedId);
+            return sendJSON(res, 200, { consensus });
+        }
+
+        // --- Security Audit Engine ---
+        if (pathname === '/api/v1/security/audit' && method === 'GET') {
+            const audit = await sdk.runSecurityAudit();
+            return sendJSON(res, 200, audit);
+        }
+
         // Fallback 404
         sendJSON(res, 404, {
             error: 'Route not found',
@@ -200,7 +252,12 @@ const server = http.createServer(async (req, res) => {
                 'GET /api/v1/jury/leaderboard',
                 'POST /api/v1/jury/commit',
                 'POST /api/v1/jury/reveal',
-                'POST /api/v1/bridge/dispatch'
+                'POST /api/v1/bridge/dispatch',
+                'POST /api/v1/nft/mint',
+                'GET /api/v1/nft/badges',
+                'POST /api/v1/oracle/telemetry',
+                'GET /api/v1/oracle/consensus',
+                'GET /api/v1/security/audit'
             ]
         });
     } catch (err) {
@@ -214,6 +271,7 @@ if (require.main === module) {
         console.log(`[Block-Architect-TR] REST API Server Running on port ${PORT}`);
         console.log(`Health Check: http://localhost:${PORT}/api/v1/health`);
         console.log(`Metrics:      http://localhost:${PORT}/api/v1/metrics`);
+        console.log(`Security:     http://localhost:${PORT}/api/v1/security/audit`);
         console.log(`=======================================================`);
     });
 }

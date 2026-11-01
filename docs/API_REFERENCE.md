@@ -1,6 +1,6 @@
 # 📚 Block-Architect-TR: API & SDK Başvuru Kılavuzu
 
-Bu doküman, **BlockArchitectSDK** kütüphanesini ve dahili REST API sunucusunu kullanarak 8 akıllı sözleşmeli kurumsal ekosisteme nasıl entegre olunacağını açıklar.
+Bu doküman, **BlockArchitectSDK** kütüphanesini ve dahili REST API sunucusunu kullanarak 11 akıllı sözleşmeli kurumsal ekosisteme nasıl entegre olunacağını açıklar.
 
 ---
 
@@ -65,11 +65,33 @@ await sdk.commitJuryScore(teamId, rubric, salt, juryAddress);
 await sdk.revealJuryScore(teamId, rubric, salt, juryAddress);
 ```
 
-#### `dispatchBridgeMessage(destinationChainId, targetContract, payload)`
-Dış EVM blokzincirlerine (Polygon, Ethereum, Avalanche) durum aktarımı yapar.
+#### `mintNFTBadge(recipient, teamName, tier, isSoulbound)`
+Takımlar için EIP-5192 Soulbound başarı madalyası basar.
 ```javascript
-const msg = await sdk.dispatchBridgeMessage(137, '0xTargetContract', 'StatePayload');
-console.log('Dispatched Nonce:', msg.nonce);
+const nft = await sdk.mintNFTBadge('0xStudentKTU', 'Cezeri Takımı', 'Gold', true);
+console.log('Minted Token ID:', nft.tokenId);
+```
+
+#### `submitTelemetryFeed(feedId, nodeAddress, temperature, altitude)` & `getConsensusTelemetry(feedId)`
+Dağıtık IoT istasyonlarından telemetri toplar ve medyan konsensüsünü döner.
+```javascript
+await sdk.submitTelemetryFeed('TKF-IHA-01', '0xNodeTrabzon', 21.4, 1250);
+const consensus = await sdk.getConsensusTelemetry('TKF-IHA-01');
+console.log('Consensus Temp:', consensus.temperature);
+```
+
+#### `sponsorGaslessTransaction(beneficiary, targetContract, callData)`
+ERC-4337 öğrenci paymaster sponsorluğu ile gazsız işlem icra eder.
+```javascript
+const tx = await sdk.sponsorGaslessTransaction('0xStudentTeam', '0xTargetCore', '0xCallData');
+console.log('Sponsored Tx Hash:', tx.txHash);
+```
+
+#### `runSecurityAudit()`
+Tüm akıllı sözleşmeler ve penetrasyon harness üzerinde güvenlik denetimi çalıştırır.
+```javascript
+const auditReport = await sdk.runSecurityAudit();
+console.log('Security Grade:', auditReport.overallGrade);
 ```
 
 ---
@@ -81,7 +103,7 @@ REST API sunucusu `node src/api/server.js` veya `npm start` komutuyla 3000 numar
 | Metot | Uç Nokta | Açıklama |
 |---|---|---|
 | `GET` | `/api/v1/health` | Sistem sağlık ve mimari protokol durumunu döndürür |
-| `GET` | `/api/v1/metrics` | İşlem sayısı, aktif DID, ZK ve kargo istatistiklerini iletir |
+| `GET` | `/api/v1/metrics` | İşlem sayısı, aktif DID, ZK, NFT ve kargo istatistiklerini iletir |
 | `POST` | `/api/v1/operations` | Blokzincire yeni bir işlem mühürler |
 | `POST` | `/api/v1/operations/batch` | Toplu verileri Merkle köküyle işler |
 | `POST` | `/api/v1/did/register` | Yeni bir W3C DID kimliği üretir |
@@ -93,11 +115,10 @@ REST API sunucusu `node src/api/server.js` veya `npm start` komutuyla 3000 numar
 | `GET` | `/api/v1/jury/leaderboard` | Hakem heyeti konsensüs liderlik tablosunu döndürür |
 | `POST` | `/api/v1/jury/commit` | Şifreli jüri taahhüdünü ağa yazar |
 | `POST` | `/api/v1/jury/reveal` | Jüri puanını açığa çıkarıp konsensüse katar |
+| `POST` | `/api/v1/nft/mint` | EIP-5192 Soulbound başarı rozeti basar |
+| `GET` | `/api/v1/nft/badges` | Basılan tüm başarı madalyalarını listeler |
+| `POST` | `/api/v1/oracle/telemetry` | Dağıtık sensör telemetri verisi iletir |
+| `GET` | `/api/v1/oracle/consensus` | Medyan ve aykırı değer filtrelenmiş konsensüs verisi döner |
+| `POST` | `/api/v1/paymaster/sponsor` | ERC-4337 sıfır gazlı sponsorlu işlem yürütür |
+| `GET` | `/api/v1/security/audit` | Otomatik penetrasyon ve güvenlik raporunu döndürür |
 | `POST` | `/api/v1/bridge/dispatch` | Çapraz zincir köprüsüne mesaj sevk eder |
-
-### Örnek İstek (cURL):
-```bash
-curl -X POST http://localhost:3000/api/v1/operations \
-  -H "Content-Type: application/json" \
-  -d '{"payload": "TEKNOFEST 2025 Canli Telemetri Paketi", "tag": "TELEMETRY"}'
-```

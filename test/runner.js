@@ -1,7 +1,7 @@
 /**
  * @file runner.js
  * @author Bahattin Yunus Çetin (IT Architect)
- * @notice Enterprise test suite and verification runner for all 8 Block-Architect-TR modules.
+ * @notice Masterpiece test suite and verification runner for all 11 Block-Architect-TR modules.
  */
 
 const assert = require('assert');
@@ -47,7 +47,7 @@ async function itAsync(description, fn) {
 
 async function runAllTests() {
     console.log(`\n===============================================================`);
-    console.log(`   TEST SÜİTİ: BLOCK-ARCHITECT-TR 8'Lİ PROTOKOL DOĞRULAMASI`);
+    console.log(`   TEST SÜİTİ: BLOCK-ARCHITECT-TR 11'Lİ KURUMSAL PROTOKOL`);
     console.log(`===============================================================\n`);
 
     // 1. Kriptografi & Merkle
@@ -208,8 +208,66 @@ async function runAllTests() {
         assert.strictEqual(team.rank, 'Türkiye Şampiyonu');
     });
 
-    // 7. Cross-Chain Bridge
-    console.log('\n📌 7. Çapraz Zincir Durum Köprüsü (Cross-Chain Bridge) Testleri');
+    // 7. Soulbound Achievement NFT (EIP-5192)
+    console.log('\n📌 7. Soulbound Achievement Badge NFT (EIP-5192) Testleri');
+    let mintedTokenId;
+    await itAsync('Şampiyon takım için devredilemez Soulbound madalya basılmalı', async () => {
+        const badge = await sdk.mintAchievementBadge('0xCezeriTeam', 'Cezeri Otonom', 'Aviyonik Blokzincir', 'Gold', 9750, '0xProofHash', true);
+        mintedTokenId = badge.tokenId;
+        assert.strictEqual(badge.tier, 'Gold');
+        assert.strictEqual(badge.isSoulbound, true);
+        assert.strictEqual(badge.scoreScaled, 9750);
+    });
+
+    it('Sahibe göre basılan NFT rozetleri doğru listelenmeli', () => {
+        const badges = sdk.getBadges('0xCezeriTeam');
+        assert.strictEqual(badges.length, 1);
+        assert.strictEqual(badges[0].teamName, 'Cezeri Otonom');
+    });
+
+    // 8. Telemetry Oracle Hub
+    console.log('\n📌 8. Multi-Node IoT Telemetri Oracle Hub Testleri');
+    await itAsync('Dağıtık düğümlerden telemetri verisi toplanmalı', async () => {
+        await sdk.submitTelemetryFeed('TKF-IHA-01', '0xNodeTrabzon', 2140, 1200, 180);
+        await sdk.submitTelemetryFeed('TKF-IHA-01', '0xNodeSamsun', 2150, 1202, 181);
+        await sdk.submitTelemetryFeed('TKF-IHA-01', '0xNodeAnkara', 2160, 1198, 179);
+        const feedList = sdk._simulationState.oracleFeeds.get('TKF-IHA-01');
+        assert.strictEqual(feedList.length, 3);
+    });
+
+    it('Oracle konsensüs medyanı aykırı değerleri filtreleyerek hesaplanmalı', () => {
+        const consensus = sdk.getTelemetryConsensus('TKF-IHA-01');
+        assert.strictEqual(consensus.sampleCount, 3);
+        assert.strictEqual(consensus.consensusTemperature, 2150); // Ortanca değer
+        assert.strictEqual(consensus.consensusAltitude, 1200);
+    });
+
+    // 9. Paymaster Gas Sponsorship (Account Abstraction)
+    console.log('\n📌 9. Paymaster Sıfır-Gas Sponsorluk Testleri');
+    it('Öğrenci takımı paymaster listesine eklenmeli ve kota atanmalı', () => {
+        const ok = sdk.whitelistPaymasterTeam('0xStudentKTU', 50);
+        assert.strictEqual(ok, true);
+    });
+
+    await itAsync('Beyaz listedeki takım için sıfır gaz maliyetli işlem yürütülmeli', async () => {
+        const res = await sdk.executeGaslessTransaction('0xStudentKTU', '0xIdentityContract', 'registerDID()');
+        assert.strictEqual(res.sponsored, true);
+        assert.strictEqual(res.gasCostWei, 0);
+        assert.strictEqual(res.remainingQuota, 49);
+    });
+
+    await itAsync('Beyaz listede olmayan adresin gaz sponsorluğu reddedilmeli', async () => {
+        let rejected = false;
+        try {
+            await sdk.executeGaslessTransaction('0xUnauthorizedStranger', '0xContract', 'call()');
+        } catch (e) {
+            rejected = true;
+        }
+        assert.strictEqual(rejected, true);
+    });
+
+    // 10. Cross-Chain Bridge
+    console.log('\n📌 10. Çapraz Zincir Durum Köprüsü (Cross-Chain Bridge) Testleri');
     let bridgeNonce;
     await itAsync('Dış zincire (Polygon #137) köprü mesajı sevk edilmeli', async () => {
         const msg = await sdk.dispatchBridgeMessage(137, '0xPolygonContract', 'StatePayload_123');
@@ -222,7 +280,6 @@ async function runAllTests() {
         const res = await sdk.relayBridgeMessage(137, bridgeNonce, 'StatePayload_123');
         assert.strictEqual(res.executed, true);
 
-        // Çift işleme denemesi engellenmeli
         let replayCaught = false;
         try {
             await sdk.relayBridgeMessage(137, bridgeNonce, 'StatePayload_123');
@@ -232,8 +289,8 @@ async function runAllTests() {
         assert.strictEqual(replayCaught, true);
     });
 
-    // 8. Token & Staking
-    console.log('\n📌 8. TKF Tokenomics, Staking ve Musluk Testleri');
+    // 11. Tokenomics & Security Audit
+    console.log('\n📌 11. TKF Tokenomics & Sistem Güvenlik Denetim Testleri');
     it('Doğrulayıcı musluktan test jetonu talep edebilmeli', () => {
         const initialBal = sdk.getTokenBalance('0xValidatorUser');
         sdk.claimFaucet('0xValidatorUser');
@@ -251,6 +308,12 @@ async function runAllTests() {
         const res = sdk.unstakeTokens(20, '0xValidatorUser');
         assert.strictEqual(res.staked, 30);
         assert.strictEqual(res.balance, 70);
+    });
+
+    await itAsync('Otomatik Güvenlik ve Penetrasyon Denetimi başarıyla tamamlanmalı', async () => {
+        const audit = await sdk.runSecurityAudit();
+        assert.strictEqual(audit.overallStatus, 'SECURE (Grade A+)');
+        assert.strictEqual(audit.passedChecks, 6);
     });
 
     console.log('\n===============================================================');

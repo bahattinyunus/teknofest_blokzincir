@@ -1,15 +1,18 @@
 {
   "network": "Hardhat/LocalEVM",
-  "deployedAt": "2026-10-31T10:29:23.271Z",
+  "deployedAt": "2026-11-01T03:30:56.122Z",
   "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   "contracts": {
-    "BlockArchitectCore": "0x2626f746fe59234c587c526dbb705be8cf73a691",
-    "IdentityRegistry": "0xb0671c7fda0f70c1af47091de10b2ada1251a136",
-    "SupplyChainTracker": "0x17d2cd08c271bb77b8a4659fb57c45cfb16b90b8",
-    "TeknofestToken": "0x78d1b2903dcaa539f39275d293eb483824e72cf9",
-    "GovernanceDAO": "0x3e738506e7e36d49837be8d256fba2ca8519826e",
-    "ZKProofVerifier": "0x11e73a48701f4ccc06e3015b3800314e1a1b389a",
-    "JuryScoringProtocol": "0x9368a2943ef47f5910378632553cdd661c7e6b09",
-    "CrossChainBridgeAnchor": "0x6b3b196d718b6168367bf656747c3bcdc5ab3447"
+    "BlockArchitectCore": "0xde58e2055bd14f0ead779f59aacd5a0c259e9def",
+    "IdentityRegistry": "0x6e455d553c8538486f3d302d2085dbad542cf597",
+    "SupplyChainTracker": "0x1ac2ef9cbe559ab7d859f5f29824fe24af91e0ec",
+    "TeknofestToken": "0x0489e4a8679fde8d83cd546e8c8946cb61180b28",
+    "GovernanceDAO": "0xe4062e0591218b660213fe3b6fbb7ba641e970a8",
+    "ZKProofVerifier": "0xa6814805a1865387b5fc26c61295fb3ece338ab6",
+    "JuryScoringProtocol": "0x97c56677f4a7826f65929a5a2e02c18da9b9d513",
+    "CrossChainBridgeAnchor": "0x8439a89361ad4898267b079d3c87dbbd3884c118",
+    "TeknofestBadgeNFT": "0x8cbf545afb06c239ad1f4d4b20d0eae910efd38e",
+    "TelemetryOracleHub": "0xe826a0ffbba218048121edeaf0d7276376dd5072",
+    "TeknofestPaymaster": "0x9b2c65474f01c44691584858a6254ce09ee9f34b"
   }
 }

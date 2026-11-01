@@ -1,7 +1,7 @@
 {
   "name": "teknofest_blokzincir",
-  "version": "2.5.0",
-  "description": "Block-Architect-TR: TEKNOFEST Kurumsal Blokzinciri, SSI, ZK-Proof, Jury Scoring & Cross-Chain Bridge Referans Mimarisi",
+  "version": "3.0.0",
+  "description": "Block-Architect-TR: TEKNOFEST 11'li Kurumsal Blokzinciri, SSI, ZK-Proof, Jury Scoring, Soulbound NFT, Oracle Hub & Paymaster Referans Mimarisi",
   "main": "src/main.js",
   "scripts": {
     "test": "node test/runner.js",

@@ -1,7 +1,7 @@
 /**
  * @file deploy.js
  * @author Bahattin Yunus Çetin (IT Architect)
- * @notice Automated deployment pipeline for all 8 Block-Architect-TR smart contracts.
+ * @notice Automated deployment pipeline for all 11 Block-Architect-TR smart contracts.
  */
 
 const fs = require('fs');
@@ -9,7 +9,7 @@ const path = require('path');
 
 async function main() {
     console.log("===============================================================");
-    console.log("  BLOCK-ARCHITECT-TR: 8'Lİ AKILLI SÖZLEŞME DAĞITIM HATTI");
+    console.log("  BLOCK-ARCHITECT-TR: 11'Lİ KURUMSAL AKILLI SÖZLEŞME DAĞITIMI");
     console.log("===============================================================\n");
 
     let deployer;
@@ -43,8 +43,7 @@ async function main() {
             console.log(`   ✔ ${name} adrese dağıtıldı: ${targetAddr}`);
             return targetAddr;
         } else {
-            // Deterministic hex generator for zero-friction standalone deployments
-            const hash = require('crypto').createHash('sha256').update(name + 'Teknofest2025').digest('hex');
+            const hash = require('crypto').createHash('sha256').update(name + 'Teknofest2025Masterpiece').digest('hex');
             const mockAddr = "0x" + hash.slice(0, 40);
             console.log(`   ✔ ${name} (Simüle) adrese dağıtıldı: ${mockAddr}`);
             return mockAddr;
@@ -76,6 +75,15 @@ async function main() {
     // 8. Cross-Chain Bridge Anchor (ChainID 31337, Relayer Threshold 1)
     deployedAddresses.contracts.CrossChainBridgeAnchor = await deployContract("CrossChainBridgeAnchor", 31337, 1);
 
+    // 9. Soulbound Achievement Badge NFT (EIP-5192)
+    deployedAddresses.contracts.TeknofestBadgeNFT = await deployContract("TeknofestBadgeNFT");
+
+    // 10. Multi-Node Telemetry Oracle Hub
+    deployedAddresses.contracts.TelemetryOracleHub = await deployContract("TelemetryOracleHub");
+
+    // 11. Gas Sponsorship Paymaster (Account Abstraction)
+    deployedAddresses.contracts.TeknofestPaymaster = await deployContract("TeknofestPaymaster");
+
     // Save deployment artifact
     const deploymentsDir = path.join(__dirname, '..', 'deployments');
     if (!fs.existsSync(deploymentsDir)) {
@@ -90,7 +98,7 @@ async function main() {
     fs.writeFileSync(frontendConfigFile, JSON.stringify(deployedAddresses, null, 2));
     console.log(`📁 Frontend konfigürasyonu güncellendi: ${frontendConfigFile}`);
 
-    console.log("\n✨ 8 AKILLI SÖZLEŞMENİN TÜMÜ BAŞARIYLA DAĞITILDI VE BAĞLANDI!");
+    console.log("\n✨ 11 AKILLI SÖZLEŞMENİN TÜMÜ BAŞARIYLA DAĞITILDI VE SENKRONİZE EDİLDİ!");
 }
 
 if (require.main === module) {

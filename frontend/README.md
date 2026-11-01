@@ -4,15 +4,15 @@
   <img src="../docs/assets/dashboard_preview.jpg" alt="Web3 Console Preview" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
 </p>
 
-Bu dizin, **TEKNOFEST Blokzinciri** referans mimarisi için geliştirilmiş 9 sekmeli, tam teşekküllü interaktif Web3 yönetim ve denetleme arayüzünü içerir.
+Bu dizin, **TEKNOFEST Blokzinciri** referans mimarisi için geliştirilmiş 12 sekmeli, tam teşekküllü interaktif Web3 yönetim ve denetleme arayüzünü içerir.
 
 ---
 
-## 🚀 Öne Çıkan Özellikler
+## 🚀 Öne Çıkan 12 Sekmeli Modüler Yetenekler
 
 1. **Çift Modlu Çalışma (Zero-Friction Sandbox + MetaMask)**:
    - Tarayıcıda doğrudan `index.html` dosyasını açarak veya bir yerel sunucuyla anında test edilebilir.
-   - MetaMask takılı olmasa bile tüm 8 akıllı sözleşme akışı (DID, Tedarik Zinciri, ZK, Jüri, Köprü, DAO, Staking, Musluk) dahili simülatör üzerinden eksiksiz çalışır.
+   - MetaMask takılı olmasa bile tüm 11 akıllı sözleşme akışı dahili simülatör üzerinden eksiksiz çalışır.
    - MetaMask bağlı olduğunda gerçek Web3 sağlayıcısı ile etkileşime girer.
 
 2. **Merkeziyetsiz Kimlik (DID / SSI) Yönetimi**:
@@ -31,15 +31,31 @@ Bu dizin, **TEKNOFEST Blokzinciri** referans mimarisi için geliştirilmiş 9 se
    - İki aşamalı **Commit-Reveal** şeması ile manipülasyonsuz jüri notu verme.
    - Ağırlıklı rubrik puanları (Mimari, Güvenlik, İnovasyon, Uygulama, Sunum) ve dinamik liderlik tablosu.
 
-6. **Çapraz Zincir Durum Köprüsü (Cross-Chain Bridge)**:
+6. **Soulbound Başarı Rozetleri & Madalyaları (EIP-5192 NFT)**:
+   - Şampiyon, ikinci, üçüncü takımlara devredilemez (soulbound) resmi başarı madalyası basımı.
+   - Akıllı sözleşme düzeyinde kilitli kalıcı sertifikasyon vitrini.
+
+7. **Dağıtık IoT Aviyonik Telemetri Oracle Hub**:
+   - Trabzon, Samsun, Ankara ve İstanbul istasyonlarından gelen sensör verilerini toplama.
+   - Bizans Hata Toleranslı Medyan algoritmasıyla aykırı değerleri otomatik eleme ve konsensüs telemetrisi üretme.
+
+8. **Çapraz Zincir Durum Köprüsü (Cross-Chain Bridge)**:
    - Yerel alt ağdan Polygon, Ethereum ve Avalanche ağlarına durum sevk simülasyonu ve relayer çoklu imza denetimi.
 
-7. **DAO Yönetişim ve Oylama Protokolü**:
-   - Topluluk teklifleri oluşturma, Evet/Hayır oylamaları, kuorum ve timelock izleme.
+9. **Güvenlik ve Penetrasyon Laboratuvarı**:
+   - Tek tıkla canlı Reentrancy saldırı simülasyonu (`contracts/security/ReentrancyAttacker.sol`).
+   - Sıfır bilgi çift harcama (nullifier replay) testi.
+   - Yetkisiz admin erişimi (access control breach) test harness ve A+ güvenlik karnesi.
 
-8. **TKF Tokenomics, Staking ve Faucet**:
-   - Yıllık %12 APY getiri oranlı validator staking simülatörü.
-   - Hakem heyeti ve değerlendiriciler için tek tıkla testnet token talep musluğu.
+10. **DAO Yönetişim ve Oylama Protokolü**:
+    - Topluluk teklifleri oluşturma, Evet/Hayır oylamaları, kuorum ve timelock izleme.
+
+11. **TKF Tokenomics, Staking ve Faucet**:
+    - Yıllık %12 APY getiri oranlı validator staking simülatörü.
+    - Hakem heyeti ve değerlendiriciler için tek tıkla testnet token talep musluğu.
+
+12. **Çekirdek İşlem ve Canlı Terminal Konsolu**:
+    - Ham blokzincir işlemlerini SHA-256/Keccak-256 ile anlık mühürleme ve canlı operasyon terminali akışı.
 
 ---
 

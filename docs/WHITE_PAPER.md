@@ -4,24 +4,26 @@
 **Yazar:** Bahattin Yunus Çetin  
 **Unvan:** IT Architect  
 **Konum:** Trabzon / Of  
-**Sürüm:** 2.5.0 (Enterprise Final)  
+**Sürüm:** 3.0.0 (Masterpiece Enterprise)  
 **Tarih:** 2025/2026  
 
 ---
 
 ## Özet (Abstract)
-Blokzinciri teknolojisi, yalnızca finansal transferler için değil; kamu güvenliği, ulusal savunma sanayii tedarik zinciri, gizlilik korumalı kimlik doğrulama ve merkeziyetsiz yarışma hakemliği için de kritik bir omurga teşkil etmektedir. Bu çalışmada sunulan **Block-Architect Protocol**, Türkiye'nin **Milli Teknoloji Hamlesi** vizyonu doğrultusunda TEKNOFEST Blokzinciri Yarışması için geliştirilmiş, yüksek güvenlikli, modüler ve EVM uyumlu 8 sözleşmeli bir kurumsal blokzinciri ekosistemidir.
+Blokzinciri teknolojisi, yalnızca finansal transferler için değil; kamu güvenliği, ulusal savunma sanayii tedarik zinciri, gizlilik korumalı kimlik doğrulama, Soulbound başarı tescili ve merkeziyetsiz yarışma hakemliği için de kritik bir omurga teşkil etmektedir. Bu çalışmada sunulan **Block-Architect Protocol**, Türkiye'nin **Milli Teknoloji Hamlesi** vizyonu doğrultusunda TEKNOFEST Blokzinciri Yarışması için geliştirilmiş, yüksek güvenlikli, modüler ve EVM uyumlu 11 sözleşmeli bir kurumsal blokzinciri ekosistemidir.
 
-Protokol; rol tabanlı erişim kontrollü çekirdek sistem (`BlockArchitectCore`), W3C v1.0 uyumlu Merkeziyetsiz Kimlik kaydı (`IdentityRegistry`), IoT telemetri mühürlü tedarik zinciri takibi (`SupplyChainTracker`), Sıfır Bilgi İspatı doğrulama motoru (`ZKProofVerifier`), jüri manipülasyonunu engelleyen commit-reveal puanlama protokolü (`JuryScoringProtocol`), L2 durum aktarımı sağlayan çapraz zincir köprüsü (`CrossChainBridgeAnchor`), deflasyonist ekonomik modele sahip ekosistem jetonu (`TeknofestToken`) ve timelock güvenceli merkeziyetsiz otonom yönetim (`GovernanceDAO`) bileşenlerinden meydana gelir.
+Protokol; rol tabanlı erişim kontrollü çekirdek sistem (`BlockArchitectCore`), W3C v1.0 uyumlu Merkeziyetsiz Kimlik kaydı (`IdentityRegistry`), IoT telemetri mühürlü tedarik zinciri takibi (`SupplyChainTracker`), Sıfır Bilgi İspatı doğrulama motoru (`ZKProofVerifier`), jüri manipülasyonunu engelleyen commit-reveal puanlama protokolü (`JuryScoringProtocol`), EIP-5192 Soulbound NFT madalya sertifikasyonu (`TeknofestBadgeNFT`), dağıtık çoklu düğüm Bizans hata toleranslı telemetri oraclesı (`TelemetryOracleHub`), ERC-4337 hesap soyutlama gaz sponsorluğu (`TeknofestPaymaster`), L2 durum aktarımı sağlayan çapraz zincir köprüsü (`CrossChainBridgeAnchor`), deflasyonist ekonomik modele sahip ekosistem jetonu (`TeknofestToken`) ve timelock güvenceli merkeziyetsiz otonom yönetim (`GovernanceDAO`) bileşenlerinden meydana gelir.
 
 ---
 
 ## 1. Giriş ve Problem Tanımı
 Mevcut kurumsal blokzinciri entegrasyonlarında karşılaşılan temel zorluklar şunlardır:
-1. **Veri Bütünlüğü ve Dış Dünya Entegrasyonu:** IoT cihazlarından gelen verilerin (sıcaklık, nem, konum) manipülasyona açık olması.
+1. **Veri Bütünlüğü ve Dış Dünya Entegrasyonu:** IoT cihazlarından gelen verilerin (sıcaklık, nem, irtifa) tekil oracle manipülasyonlarına açık olması.
 2. **Kimlik Yönetiminde Gizlilik ve Güvenlik:** Katılımcıların ve kurumların verilerinin merkezi veritabanlarında sızıntılara maruz kalması.
 3. **Değerlendirme Şeffaflığı ve Hakem Kolüzyonu:** Yarışma değerlendirmelerinde hakemlerin birbirlerinin notlarından etkilenmesi veya puan sızıntıları.
-4. **Çoklu Zincir İletişim Engelleri:** Yerel alt ağların (Subnet) Ethereum veya Polygon gibi ana ağlarla güvenli durum senkronizasyonunun eksikliği.
+4. **Başarı Belgelerinin Devredilebilirliği:** Geleneksel NFT'lerin satılabilir olması sebebiyle yarışma ödül ve madalyalarının sahte transferlere konu olabilmesi.
+5. **Kullanıcı Giriş Bariyeri (Gas Maliyeti):** Öğrenci takımlarının işlem gerçekleştirebilmek için yerel kripto para edinme zorunluluğu.
+6. **Çoklu Zincir İletişim Engelleri:** Yerel alt ağların (Subnet) Ethereum veya Polygon gibi ana ağlarla güvenli durum senkronizasyonunun eksikliği.
 
 ---
 
@@ -54,23 +56,33 @@ $$\text{RevealPhase}: \quad \text{Verify}(H_{commit} \stackrel{?}{=} \text{Kecca
 
 Tüm geçerli oylar açığa çıkarıldıktan sonra kırpılmış ağırlıklı ortalama (trimmed mean) hesaplanır.
 
-### 2.4 Çapraz Zincir Eşik Çoklu İmza (Threshold Multi-Sig) Doğrulaması
+### 2.4 Bizans Hata Toleranslı Telemetri Medyanı
+$K$ adet sensör düğümünden gelen okumalar $\{x_1, x_2, \dots, x_k\}$ sıralanır:
+
+$$\tilde{x} = \text{Median}(x_1, x_2, \dots, x_k)$$
+
+Uç değerler ($|x_i - \tilde{x}| > 3\sigma$) aykırı değer kabul edilerek elenir.
+
+### 2.5 EIP-5192 Soulbound Kilit Matematiksel Kısıtı
+Akıllı sözleşme düzeyinde tüm transfer fonksiyonları için:
+
+$$\forall \text{from} \ne 0, \quad \text{Transfer}(\text{from}, \text{to}, \text{tokenId}) \implies \bot \quad (\text{Revert})$$
+
+### 2.6 Çapraz Zincir Eşik Çoklu İmza (Threshold Multi-Sig) Doğrulaması
 $N$ adet relayer düğümünden en az $M$ tanesinin geçerli ECDSA imzası şart koşulur ($M$-of-$N$ threshold):
 
 $$\sum_{i=1}^{N} \mathbb{I}(\text{ecrecover}(\text{Digest}, \sigma_i) \in \mathcal{R}) \ge M$$
 
 Replay saldırılarına karşı her dış zincir için monotonik artan bir `nonce` tablosu zorunlu tutulur.
 
-### 2.5 Staking ve Yıllık Ödül Modeli (APY)
+### 2.7 Staking ve Yıllık Ödül Modeli (APY)
 Doğrulayıcı düğümlerin ağa kilitledikleri $S$ miktarındaki TKF jetonları için yıllık %12 oranında ödül tahakkuk eder:
 
 $$R = \frac{S \times 12 \times \Delta t}{365 \times 86400 \times 100}$$
 
-Kötü niyetli veya sahte telemetri ileten düğümler için sözleşme bünyesinde slashing (teminat yakımı) mekanizması aktiftir.
-
 ---
 
-## 3. 8'li Protokol Sözleşmeleri Matrisi
+## 3. 11'li Protokol Sözleşmeleri Matrisi
 
 | Akıllı Sözleşme | Görev ve Standart | Güvenlik Mekanizması |
 |---|---|---|
@@ -79,6 +91,9 @@ Kötü niyetli veya sahte telemetri ileten düğümler için sözleşme bünyesi
 | `SupplyChainTracker.sol` | Aviyonik ve Kargo Telemetri Takibi | IoT SHA3 İmzaları, Çok Taraflı İmza |
 | `ZKProofVerifier.sol` | Sıfır Bilgi İspatı & Nullifier Gizlilik Motoru | Anti-Double-Spend, Merkle Membership |
 | `JuryScoringProtocol.sol` | TEKNOFEST Hakem Heyeti Puanlama Konsensüsü | Commit-Reveal Anti-Collusion Scheme |
+| `TeknofestBadgeNFT.sol` | EIP-5192 Soulbound Başarı Rozeti & Madalyaları | Kalıcı Transfer Kilidi (Non-transferable) |
+| `TelemetryOracleHub.sol` | Dağıtık Çoklu Düğüm Telemetri Konsensüsü | Bizans Hata Toleranslı Medyan Filtresi |
+| `TeknofestPaymaster.sol` | ERC-4337 Hesap Soyutlama & Gazsız Sponsorluk | Günlük Bütçe Kotası, Whitelist Kontrolü |
 | `CrossChainBridgeAnchor.sol`| L2/Subnet ile Ethereum/Polygon Durum Köprüsü | Monotonic Nonce Replay Guard, Multi-Sig |
 | `TeknofestToken.sol` | $TKF ERC-20 Fayda ve Doğrulayıcı Teminatı | Fixed Cap (10M), Ceza Yakımı (Slashing) |
 | `GovernanceDAO.sol` | Topluluk Teklifleri ve Parametre Değişimi | Kuorum, 24 Saatlik Timelock |
@@ -89,16 +104,12 @@ Kötü niyetli veya sahte telemetri ileten düğümler için sözleşme bünyesi
 * **Sybil Saldırıları:** Yalnızca `ADMIN_ROLE` tarafından yetkilendirilmiş veya minimum 1,000 TKF teminat yatırmış doğrulayıcı düğümler işlem mühürleyebilir.
 * **Front-Running ve MEV:** Hassas lojistik ve jüri puanlama süreçlerinde Commit-Reveal şeması ile sızıntılar engellenir.
 * **Replay ve Çift Harcama:** ZK nullifier'ları ve köprü nonce tabloları ile her işlem tekil kılınır.
-* **Akıllı Sözleşme Zafiyetleri:** Tüm state değişiklikleri checks-effects-interactions modeline uygun yazılmış olup statik kod analizinden geçirilmiştir.
+* **Reentrancy Saldırıları:** `ReentrancyGuard` kilitleri ve `contracts/security/ReentrancyAttacker.sol` test donanımı ile doğrulanmış CEI mimarisi.
 
 ---
 
 ## 5. Yol Haritası (Roadmap)
 * **Faz 1 (2025 Q1-Q2):** Çekirdek mimari tasarım, temel sözleşmeler ve birim test süitinin tamamlanması.
-* **Faz 2 (2025 Q3-Q4):** Web3 Yönetim Konsolu, ZK-Proof motoru, Jüri Commit-Reveal protokolü ve Çapraz Zincir Köprüsü.
-* **Faz 3 (2026 Q1-Q2):** TEKNOFEST yarışma sahasında canlı aviyonik parça lojistik takibi ve jüri puanlama sistemi entegrasyonu.
+* **Faz 2 (2025 Q3-Q4):** 12 sekmeli Web3 Yönetim Konsolu, ZK-Proof motoru, Jüri Commit-Reveal protokolü ve Çapraz Zincir Köprüsü.
+* **Faz 3 (2026 Q1-Q2):** TEKNOFEST yarışma sahasında canlı aviyonik parça lojistik takibi, Soulbound NFT ve Paymaster gaz sponsorluğu.
 * **Faz 4 (2026 Q3+):** Yerli ve milli blokzinciri altyapıları ile Layer-2 Rollup entegrasyonu.
-
----
-
-*"Geleceğin mimarisi, veriyi şeffaf, güvenli ve gizliliği koruyarak mühürleyen blokzinciri blokları üzerine inşa edilecektir."*
